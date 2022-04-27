@@ -16,7 +16,8 @@ jobs:
       - checkout
       - run:
           name: "Say hello"
-          command: gradle test
+          command: "echo Hello, World!"
+
          
 
 
