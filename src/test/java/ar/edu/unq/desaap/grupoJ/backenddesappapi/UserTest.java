@@ -30,7 +30,7 @@ public class UserTest {
     @Test
     public void testUserShortNameLengthShouldFail() {
         User user = new User();
-        user.setName(GetRandomStringOfLength(3));
+        user.setName(GetRandomStringOfLengthOnlyLetters(3));
 
         assertFalse(user.isValidName());
     }
@@ -38,7 +38,7 @@ public class UserTest {
     @Test
     public void testUserLongNameLengthShouldFail() {
         User user = new User();
-        user.setName(GetRandomStringOfLength(31));
+        user.setName(GetRandomStringOfLengthOnlyLetters(31));
 
         assertFalse(user.isValidName());
     }
@@ -46,7 +46,7 @@ public class UserTest {
     @Test
     public void testUserShortLastNameLengthShouldFail() {
         User user = new User();
-        user.setLastname(GetRandomStringOfLength(3));
+        user.setLastname(GetRandomStringOfLengthOnlyLetters(3));
 
         assertFalse(user.isValidLastName());
     }
@@ -54,7 +54,7 @@ public class UserTest {
     @Test
     public void testUserLongLastNameLengthShouldFail() {
         User user = new User();
-        user.setLastname(GetRandomStringOfLength(31));
+        user.setLastname(GetRandomStringOfLengthOnlyLetters(31));
 
         assertFalse(user.isValidLastName());
     }
@@ -62,7 +62,7 @@ public class UserTest {
     @Test
     public void testUserShortAddressLengthShouldFail() {
         User user = new User();
-        user.setAddress(GetRandomStringOfLength(9));
+        user.setAddress(GetRandomStringOfLengthOnlyLetters(9));
 
         assertFalse(user.isValidAddress());
     }
@@ -70,7 +70,7 @@ public class UserTest {
     @Test
     public void testUserLongAddressLengthShouldFail() {
         User user = new User();
-        user.setAddress(GetRandomStringOfLength(21));
+        user.setAddress(GetRandomStringOfLengthOnlyLetters(21));
 
         assertFalse(user.isValidAddress());
     }
@@ -78,7 +78,7 @@ public class UserTest {
     @Test
     public void testUserInvalidCVULengthShouldFail() {
         User user = new User();
-        user.setCvu(GetRandomStringOfLength(21));
+        user.setCvu(GetRandomStringOfLengthOnlyLetters(21));
 
         assertFalse(user.isValidCVU());
     }
@@ -86,14 +86,80 @@ public class UserTest {
     @Test
     public void testUserInvalidWalletLengthShouldFail() {
         User user = new User();
-        user.setWallet(GetRandomStringOfLength(8));
+        user.setWallet(GetRandomStringOfLengthOnlyLetters(8));
 
         assertFalse(user.isValidWallet());
     }
 
-    private String GetRandomStringOfLength(Integer length){
-        byte[] array = new byte[length];
-        new Random().nextBytes(array);
-        return new String(array, Charset.forName("UTF-8"));
+    @Test
+    public void testUserWithCorrectEmail() {
+        User user = new User();
+        user.setEmail("pepito@hotmail.com");
+
+        assertTrue(user.isValidEmail());
     }
+
+
+    @Test
+    public void testUserCorrectLengthName() {
+        User user = new User();
+        user.setName(GetRandomStringOfLengthOnlyLetters(10));
+        System.out.println(user.getName().length());
+        assertTrue(user.isValidName());
+    }
+       @Test
+    public void testUserCorrectLastName() {
+        User user = new User();
+        user.setLastname(GetRandomStringOfLengthOnlyLetters(10));
+
+        assertTrue(user.isValidLastName());
+    }
+
+
+    @Test
+    public void testUserCorrectLengthAddress() {
+        User user = new User();
+        user.setAddress(GetRandomStringOfLengthOnlyLetters(10) + GetRandomStringNumericOfLengthOnlyLetters(4));
+
+        assertTrue(user.isValidAddress());
+    }
+
+
+    @Test
+    public void testUserValidCVU() {
+        User user = new User();
+        user.setCvu(GetRandomStringNumericOfLengthOnlyLetters(8));
+
+        assertTrue(user.isValidCVU());
+    }
+
+    @Test
+    public void testUserValidWalletLength() {
+        User user = new User();
+        user.setWallet(GetRandomStringOfLengthOnlyLetters(8));
+
+        assertTrue(user.isValidWallet());
+    }
+
+
+
+
+    private String GetRandomStringOfLengthOnlyLetters(Integer length){
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = length;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+        return generatedString;
+    }
+    private String GetRandomStringNumericOfLengthOnlyLetters(Integer length){
+        int number = (int) (Math.random() * length) + 1;
+        return number + "";
+    }
+
+
 }

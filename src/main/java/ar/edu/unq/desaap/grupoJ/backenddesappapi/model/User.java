@@ -123,6 +123,6 @@ public class User {
         Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     public boolean isValidLength(String string, Integer min, Integer max){
-        return string.length() < min && string.length() > max;
+        return string.length() < min && string.length() >= max;
     }
 }
