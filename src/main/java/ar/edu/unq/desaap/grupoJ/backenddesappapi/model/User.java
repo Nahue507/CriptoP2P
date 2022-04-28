@@ -1,14 +1,20 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.model;
 
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+@Entity
 public class User {
     @Id
     @GeneratedValue
+    @Column
     private Integer id;
     @Column
     private String name;
@@ -93,27 +99,27 @@ public class User {
         this.cvu = cvu;
         this.wallet = wallet;
     }
-
+    @JsonIgnore
     public boolean isValidName(){
         return isValidLength(this.name, 3, 30);
     }
-
+    @JsonIgnore
     public boolean isValidLastName(){
         return isValidLength(this.lastname, 3, 30);
     }
-
+    @JsonIgnore
     public boolean isValidAddress(){
         return isValidLength(this.address, 10, 20);
     }
-
+    @JsonIgnore
     public boolean isValidCVU(){
-        return isValidLength(this.cvu, 22, 22);
+        return this.cvu.length() == 22;
     }
-
+    @JsonIgnore
     public boolean isValidWallet(){
-        return isValidLength(this.wallet, 8, 8);
+        return this.wallet.length() == 8;
     }
-
+    @JsonIgnore
     public boolean isValidEmail(){
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(this.email);
         return matcher.find();
@@ -123,6 +129,6 @@ public class User {
         Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     public boolean isValidLength(String string, Integer min, Integer max){
-        return string.length() < min && string.length() >= max;
+        return string.length() >= min && string.length() <= max;
     }
 }
