@@ -1,13 +1,14 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.User;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.Charset;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class UserTest {
 
@@ -30,7 +31,7 @@ public class UserTest {
     @Test
     public void testUserShortNameLengthShouldFail() {
         User user = new User();
-        user.setName(GetRandomStringOfLengthOnlyLetters(3));
+        user.setName(GetRandomStringOfLengthOnlyLetters(2));
 
         assertFalse(user.isValidName());
     }
@@ -46,7 +47,7 @@ public class UserTest {
     @Test
     public void testUserShortLastNameLengthShouldFail() {
         User user = new User();
-        user.setLastname(GetRandomStringOfLengthOnlyLetters(3));
+        user.setLastname(GetRandomStringOfLengthOnlyLetters(2));
 
         assertFalse(user.isValidLastName());
     }
@@ -86,7 +87,7 @@ public class UserTest {
     @Test
     public void testUserInvalidWalletLengthShouldFail() {
         User user = new User();
-        user.setWallet(GetRandomStringOfLengthOnlyLetters(8));
+        user.setWallet(GetRandomStringOfLengthOnlyLetters(7));
 
         assertFalse(user.isValidWallet());
     }
@@ -119,7 +120,7 @@ public class UserTest {
     @Test
     public void testUserCorrectLengthAddress() {
         User user = new User();
-        user.setAddress(GetRandomStringOfLengthOnlyLetters(10) + GetRandomStringNumericOfLengthOnlyLetters(4));
+        user.setAddress(GetRandomStringOfLengthOnlyLetters(10) +" " + GetRandomStringNumericOfLength(4));
 
         assertTrue(user.isValidAddress());
     }
@@ -128,7 +129,7 @@ public class UserTest {
     @Test
     public void testUserValidCVU() {
         User user = new User();
-        user.setCvu(GetRandomStringNumericOfLengthOnlyLetters(8));
+        user.setCvu(GetRandomStringNumericOfLength(22));
 
         assertTrue(user.isValidCVU());
     }
@@ -156,9 +157,9 @@ public class UserTest {
                 .toString();
         return generatedString;
     }
-    private String GetRandomStringNumericOfLengthOnlyLetters(Integer length){
-        int number = (int) (Math.random() * length) + 1;
-        return number + "";
+    private String GetRandomStringNumericOfLength(Integer length){
+       String number= RandomStringUtils.randomNumeric(length);
+       return number;
     }
 
 
