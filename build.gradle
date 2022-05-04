@@ -11,14 +11,17 @@ group = 'ar.edu.unq.desaap.grupoJ'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+
+
 repositories {
 	mavenCentral()
 }
 
 sonarqube {
 	properties {
-		property 'sonar.projectName', backend-desapp-api
-		property 'sonar.projectKey', project.group + ':sonar-jacoco'
+		property "sonar.projectKey", "Nahue507_CriptoP2P"
+		property "sonar.organization", "nahue507"
+		property "sonar.host.url", "https://sonarcloud.io"
 	}
 }
 jacocoTestReport {
@@ -48,5 +51,6 @@ dependencies {
 }
 
 tasks.named('test') {
+
 	useJUnitPlatform()
 }
