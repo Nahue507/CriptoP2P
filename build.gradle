@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'war'
+	id "org.sonarqube" version "3.3"
 }
 
 group = 'ar.edu.unq.desaap.grupoJ'
@@ -19,11 +20,26 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.7'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.h2database:h2'
+	//runtimeOnly 'com.h2database:h2'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.apache.commons:commons-lang3'
+	implementation 'org.postgresql:postgresql:42.1.4'
+
+
+}
+
+sonarqube {
+	properties {
+		property "sonar.projectName", "backend-desapp-api"
+		property "sonar.projectKey", "backend-desapp-api"
+		property "sonar.Host.url", "http://localhost:9000"
+		property "sonar.language", "Java"
+		property "sonar.sources", "src/main/"
+		property "sonar.login", "admin"
+		property "sonar.password", "grupoj"
+	}
 }
 
 tasks.named('test') {
