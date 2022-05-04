@@ -13,6 +13,24 @@ public class UsersService {
     private IUserRepository userRepository;
 
     public User save(User newUser) throws UsersException {
+        if(!newUser.isValidName()){
+            throw new UsersException("Invalid Name length");
+        }
+        if(!newUser.isValidLastName()){
+            throw new UsersException("Invalid lastname length");
+        }
+        if(!newUser.isValidEmail()){
+            throw new UsersException("Invalid Email");
+        }
+        if(!newUser.isValidPassword()){
+            throw new UsersException("Invalid Password");
+        }
+        if(!newUser.isValidAddress()){
+            throw new UsersException("Invalid Address length");
+        }
+        if(!newUser.isValidWallet()){
+            throw new UsersException("Invalid Wallet length");
+        }
         if(!newUser.isValidCVU()){
             throw new UsersException("Invalid CVU length");
         }

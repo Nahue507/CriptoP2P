@@ -16,19 +16,19 @@ public class User {
     @GeneratedValue
     @Column
     private Integer id;
-    @Column
+    @Column(nullable = false)
     private String name;
-    @Column
+    @Column(nullable = false)
     private String lastname;
-    @Column
+    @Column(nullable = false, unique = true)
     private String email;
     @Column
     private String address;
-    @Column
+    @Column(nullable = false)
     private String password;
-    @Column
+    @Column(nullable = false)
     private String cvu;
-    @Column
+    @Column(nullable = false)
     private String wallet;
 
     public String getName() {
@@ -124,11 +124,19 @@ public class User {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(this.email);
         return matcher.find();
     }
+    @JsonIgnore
+    public boolean isValidPassword(){
+        Matcher matcher = VALID_PASSWORD_REGEX.matcher(this.password);
+        return matcher.find();
+    }
 
-    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+    private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
         Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-    public boolean isValidLength(String string, Integer min, Integer max){
+    private static final Pattern VALID_PASSWORD_REGEX =
+        Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$", Pattern.CASE_INSENSITIVE);
+
+    private boolean isValidLength(String string, Integer min, Integer max){
         return string.length() >= min && string.length() <= max;
     }
 }
