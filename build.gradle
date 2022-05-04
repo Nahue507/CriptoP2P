@@ -4,6 +4,7 @@ plugins {
 	id 'java'
 	id 'war'
 	id "org.sonarqube" version "3.3"
+	id 'jacoco'
 }
 
 group = 'ar.edu.unq.desaap.grupoJ'
@@ -14,6 +15,20 @@ repositories {
 	mavenCentral()
 }
 
+sonarqube {
+	properties {
+		property 'sonar.projectName', backend-desapp-api
+		property 'sonar.projectKey', project.group + ':sonar-jacoco'
+	}
+}
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		csv.enabled false
+		html.enabled false
+	}
+}
+test.finalizedBy jacocoTestReport
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -26,20 +41,10 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.apache.commons:commons-lang3'
 	implementation 'org.postgresql:postgresql:42.1.4'
+	compileOnly 'org.sonarsource.sonarqube:sonar-plugin-api:7.9'
+	testImplementation 'org.sonarsource.sonarqube:sonar-plugin-api:7.9'
 
 
-}
-
-sonarqube {
-	properties {
-		property "sonar.projectName", "backend-desapp-api"
-		property "sonar.projectKey", "backend-desapp-api"
-		property "sonar.Host.url", "http://localhost:9000"
-		property "sonar.language", "Java"
-		property "sonar.sources", "src/main/"
-		property "sonar.login", "admin"
-		property "sonar.password", "grupoj"
-	}
 }
 
 tasks.named('test') {
