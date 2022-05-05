@@ -18,7 +18,8 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - sonarcloud/scan
+      - sonarcloud/scan:
+          sonar_token_variable_name: SONAR_TOKEN 
   
     
           
@@ -34,3 +35,5 @@ workflows:
       - build:
           context: sonarcloud
       - gradle/test
+      
+      
