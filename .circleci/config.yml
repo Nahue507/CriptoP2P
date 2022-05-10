@@ -11,7 +11,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/base:2021.04
+      - image: cimg/openjdk:14.0
     steps:
       - checkout
       - run:
