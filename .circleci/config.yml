@@ -10,17 +10,13 @@ orbs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   build:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: 'circleci/openjdk:11-jdk'
     steps:
       - checkout
-      - sonarcloud/scan:
-          sonar_token_variable_name: SONAR_TOKEN 
-  
+      - run:
+          name: Analyze on SonarCloud
+          command: gradle build sonarqube"
     
           
 
@@ -33,7 +29,7 @@ workflows:
   build-workflow:
     jobs:
       - build:
-          context: sonarcloud
+          context: SonarCloud
       - gradle/test
       
       
