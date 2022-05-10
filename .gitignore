@@ -26,3 +26,4 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+desarrollo-crypto.log

@@ -3,12 +3,14 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.User;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.IUserRepository;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.UsersException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsersService {
-
+    protected final Log logger = LogFactory.getLog(getClass());
     @Autowired
     private IUserRepository userRepository;
 
@@ -34,6 +36,8 @@ public class UsersService {
         if(!newUser.isValidCVU()){
             throw new UsersException("Invalid CVU length");
         }
+        logger.info("A new user was created");
         return userRepository.save(newUser);
     }
+
 }
