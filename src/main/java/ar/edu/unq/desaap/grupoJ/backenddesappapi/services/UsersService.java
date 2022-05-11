@@ -7,37 +7,35 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class UsersService {
     protected final Log logger = LogFactory.getLog(getClass());
+
     @Autowired
     private IUserRepository userRepository;
 
+    @Transactional
     public User save(User newUser) throws UsersException {
-        if(!newUser.isValidName()){
-            throw new UsersException("Invalid Name length");
+        try {
+            newUser.testIsValid();
+            User userCreated = userRepository.save(newUser);
+            logger.info("A new user was created");
+            return userCreated;
+        } catch (UsersException e) {
+            logger.error(e);
+            throw e;
+        } catch (Exception e) {
+            logger.error(e);
+            throw new UsersException("User could not be created");
         }
-        if(!newUser.isValidLastName()){
-            throw new UsersException("Invalid lastname length");
-        }
-        if(!newUser.isValidEmail()){
-            throw new UsersException("Invalid Email");
-        }
-        if(!newUser.isValidPassword()){
-            throw new UsersException("Invalid Password");
-        }
-        if(!newUser.isValidAddress()){
-            throw new UsersException("Invalid Address length");
-        }
-        if(!newUser.isValidWallet()){
-            throw new UsersException("Invalid Wallet length");
-        }
-        if(!newUser.isValidCVU()){
-            throw new UsersException("Invalid CVU length");
-        }
-        logger.info("A new user was created");
-        return userRepository.save(newUser);
     }
 
+    @Transactional
+    public List<User> findAll() {
+        return (List<User>) this.userRepository.findAll();
+    }
 }

@@ -2,7 +2,9 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.model;
 
 
 
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.UsersException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +27,7 @@ public class User {
     @Column
     private String address;
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @Column(nullable = false)
     private String cvu;
@@ -99,6 +102,31 @@ public class User {
         this.cvu = cvu;
         this.wallet = wallet;
     }
+
+    public void testIsValid() throws UsersException {
+        if(!this.isValidName()){
+            throw new UsersException("Invalid Name length");
+        }
+        if(!this.isValidLastName()){
+            throw new UsersException("Invalid lastname length");
+        }
+        if(!this.isValidEmail()){
+            throw new UsersException("Invalid Email");
+        }
+        if(!this.isValidPassword()){
+            throw new UsersException("Invalid Password");
+        }
+        if(!this.isValidAddress()){
+            throw new UsersException("Invalid Address length");
+        }
+        if(!this.isValidWallet()){
+            throw new UsersException("Invalid Wallet length");
+        }
+        if(!this.isValidCVU()){
+            throw new UsersException("Invalid CVU length");
+        }
+    }
+
     @JsonIgnore
     public boolean isValidName(){
         return isValidLength(this.name, 3, 30);
