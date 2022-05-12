@@ -1,17 +1,15 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.model;
 
-
-
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.UsersException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 @Entity
 public class User {
     @Id
