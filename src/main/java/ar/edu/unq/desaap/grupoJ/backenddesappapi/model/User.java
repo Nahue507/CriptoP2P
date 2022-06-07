@@ -31,6 +31,8 @@ public class User {
     private String cvu;
     @Column(nullable = false)
     private String wallet;
+    @Column
+    private Long reputation;
 
     public String getName() {
         return name;

@@ -1,6 +1,8 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
 
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.User;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.CurrencyService;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.UsersException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.UsersService;
 import org.apache.commons.logging.Log;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @Transactional
@@ -23,6 +27,9 @@ public class InitServiceInMemory {
 
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private CurrencyService currencyService;
 
     @PostConstruct
     public void initialize() throws UsersException {
@@ -37,5 +44,11 @@ public class InitServiceInMemory {
         usersService.save(user1);
         User user2 = new User("User", "Test", "usertest@abc.com", "calle test" , "Test1234#","1234567899923456789012","87654321" );
         usersService.save(user2);
+        List<String> symbols = currencyService.getAllCurrencySymbols();
+
+        for(String crypto : symbols){
+           currencyService.save(new Currency(crypto,0));
+        }
+
     }
 }
