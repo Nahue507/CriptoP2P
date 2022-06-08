@@ -1,21 +1,29 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class UserCurrency {
-    @Column
+    @Id
+    @GeneratedValue
+    private long id;
+
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "currencyId")
     private Currency currency;
 
     private float Quantity;
+
+    public UserCurrency() {
+    }
+
+    public UserCurrency(User user, Currency currency, float quantity) {
+        this.user = user;
+        this.currency = currency;
+        Quantity = quantity;
+    }
 }

@@ -13,12 +13,11 @@ public class Intention {
     @Column
     private TransactionType type;
 
-    @Column
+
     @ManyToOne
     @JoinColumn(name = "issuerId")
     private User issuer;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "currencyId")
     private Currency currency;

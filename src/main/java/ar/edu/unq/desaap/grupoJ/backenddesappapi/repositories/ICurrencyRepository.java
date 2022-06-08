@@ -9,7 +9,5 @@ import org.springframework.stereotype.Repository;
 @Configuration
 @Repository
 
-public interface ICurrencyRepository extends CrudRepository<Currency, Integer> {
-
-
+public interface ICurrencyRepository extends CrudRepository<Currency, String> {
 }

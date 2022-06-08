@@ -10,27 +10,22 @@ public class Transaction {
     @Column
     private Integer id;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "buyerId")
     private User buyer;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "sellerId")
     private User seller;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "buyIntentionId")
     private Intention buyIntention;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "saleIntentionId")
     private Intention saleIntention;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "currencyId")
     private Currency currency;

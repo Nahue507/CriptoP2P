@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -109,6 +110,7 @@ public class User {
     }
 
     public User() {
+        this.currencies = new HashSet<UserCurrency>();
     }
 
     public User(String name, String lastname, String email, String address, String password, String cvu, String wallet) {
@@ -118,6 +120,8 @@ public class User {
         this.address = address;
         this.password = password;
         this.cvu = cvu;
+        this.wallet = wallet;
+        this.currencies = new HashSet<UserCurrency>();
     }
 
     public void testIsValid() throws UsersException {
@@ -179,6 +183,10 @@ public class User {
     public boolean isValidPassword(){
         Matcher matcher = VALID_PASSWORD_REGEX.matcher(this.password);
         return matcher.find();
+    }
+
+    public void addCurrency(Currency currency, float quantity){
+        this.currencies.add(new UserCurrency(this, currency, quantity));
     }
 
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =

@@ -12,6 +12,7 @@ public class Currency {
     @Id
     @Column(unique = true)
     private String symbol;
+
     @Column
     private long price;
 
@@ -20,7 +21,7 @@ public class Currency {
 
     public Currency(){}
 
-    public Currency(String symbol , long price){
+    public Currency(String symbol, long price){
         this.price=price;
         this.symbol=symbol;
     }
