@@ -3,10 +3,9 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.model;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.UsersException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,23 +15,34 @@ public class User {
     @GeneratedValue
     @Column
     private Integer id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String lastname;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column
     private String address;
+
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
     @Column(nullable = false)
     private String cvu;
+
     @Column(nullable = false)
     private String wallet;
+
     @Column
     private Long reputation;
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserCurrency> currencies;
 
     public String getName() {
         return name;
@@ -90,6 +100,14 @@ public class User {
         this.wallet = wallet;
     }
 
+    public Set<UserCurrency> getCurrencies() {
+        return currencies;
+    }
+
+    public void setCurrencies(Set<UserCurrency> currencies) {
+        this.currencies = currencies;
+    }
+
     public User() {
     }
 
@@ -100,7 +118,6 @@ public class User {
         this.address = address;
         this.password = password;
         this.cvu = cvu;
-        this.wallet = wallet;
     }
 
     public void testIsValid() throws UsersException {
@@ -131,27 +148,33 @@ public class User {
     public boolean isValidName(){
         return isValidLength(this.name, 3, 30);
     }
+
     @JsonIgnore
     public boolean isValidLastName(){
         return isValidLength(this.lastname, 3, 30);
     }
+
     @JsonIgnore
     public boolean isValidAddress(){
         return isValidLength(this.address, 10, 20);
     }
+
     @JsonIgnore
     public boolean isValidCVU(){
         return this.cvu.length() == 22;
     }
+
     @JsonIgnore
     public boolean isValidWallet(){
         return this.wallet.length() == 8;
     }
+
     @JsonIgnore
     public boolean isValidEmail(){
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(this.email);
         return matcher.find();
     }
+
     @JsonIgnore
     public boolean isValidPassword(){
         Matcher matcher = VALID_PASSWORD_REGEX.matcher(this.password);
