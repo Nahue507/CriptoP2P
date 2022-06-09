@@ -26,5 +26,6 @@ public class Intention {
     private float price;
 
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 }

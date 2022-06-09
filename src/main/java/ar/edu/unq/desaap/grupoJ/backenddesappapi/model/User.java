@@ -42,7 +42,7 @@ public class User {
     @Column
     private Long reputation;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserCurrency> currencies;
 
     public String getName() {
@@ -110,7 +110,7 @@ public class User {
     }
 
     public User() {
-        this.currencies = new HashSet<UserCurrency>();
+        this.currencies = new HashSet<>();
     }
 
     public User(String name, String lastname, String email, String address, String password, String cvu, String wallet) {
@@ -121,7 +121,7 @@ public class User {
         this.password = password;
         this.cvu = cvu;
         this.wallet = wallet;
-        this.currencies = new HashSet<UserCurrency>();
+        this.currencies = new HashSet<>();
     }
 
     public void testIsValid() throws UsersException {

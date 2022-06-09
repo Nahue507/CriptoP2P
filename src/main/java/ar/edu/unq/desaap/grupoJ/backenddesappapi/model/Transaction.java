@@ -34,6 +34,7 @@ public class Transaction {
     private float price;
 
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     @Column
