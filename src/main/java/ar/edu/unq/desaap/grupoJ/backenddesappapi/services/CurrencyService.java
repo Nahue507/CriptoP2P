@@ -1,7 +1,7 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Currency;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.ICurrencyRepository;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.CurrencyRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class CurrencyService {
     protected final Log logger = LogFactory.getLog(getClass());
 
     @Autowired
-    private ICurrencyRepository currencyRepository;
+    private CurrencyRepository currencyRepository;
 
     @Transactional
     public Currency save(Currency newCurrency) {
