@@ -39,4 +39,10 @@ public class Transaction {
 
     @Column
     private TransactionStatus status;
+
+    public Integer getId() {
+        return id;
+    }
+
+
 }

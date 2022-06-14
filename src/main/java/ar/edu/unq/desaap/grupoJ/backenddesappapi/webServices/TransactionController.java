@@ -1,0 +1,38 @@
+package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
+
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Transaction;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.TransactionException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+@RestController
+@EnableAutoConfiguration
+public class TransactionController {
+
+    @Autowired
+    private TransactionService transactionService;
+
+    @PostMapping(path = "transactions",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Transaction> Create(@RequestBody Transaction transaction) {
+        try {
+            Transaction newTransaction = transactionService.save(transaction);
+            return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
+        }
+        catch (TransactionException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Transaction could not be created");
+        }
+    }
+}
