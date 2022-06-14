@@ -45,6 +45,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserCurrency> currencies;
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

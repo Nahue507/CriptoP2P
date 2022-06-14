@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,18 +23,17 @@ public class UsersController {
     @PostMapping(path = "users",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> Create(@RequestBody User newUser) throws Exception {
+    public ResponseEntity<User> Create(@RequestBody User newUser) {
 
         try {
             User user = usersService.save(newUser);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
-
         }
         catch (UsersException e){
-            throw new Exception(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
         catch (Exception e) {
-            throw new Exception("User could not be created");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User could not be created");
         }
     }
 

@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository;
 @Configuration
 @Repository
 
-public interface IUserRepository extends CrudRepository<User, Integer> {
-
+public interface UserRepository extends CrudRepository<User, Integer> {
 }
