@@ -5,6 +5,7 @@ plugins {
 	id 'war'
 	id "org.sonarqube" version "3.3"
 	id 'jacoco'
+
 }
 
 group = 'ar.edu.unq.desaap.grupoJ'
@@ -42,12 +43,13 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.apache.commons:commons-lang3'
 	implementation 'org.postgresql:postgresql:42.1.4'
+	implementation 'redis.clients:jedis:2.8.0'
 	compileOnly 'org.sonarsource.sonarqube:sonar-plugin-api:7.9'
 	testImplementation 'org.sonarsource.sonarqube:sonar-plugin-api:7.9'
-
 
 	tasks.named('test') {
 
 		useJUnitPlatform()
 	}
+
 }
