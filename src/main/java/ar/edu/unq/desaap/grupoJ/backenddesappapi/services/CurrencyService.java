@@ -17,6 +17,9 @@ public class CurrencyService {
     protected final Log logger = LogFactory.getLog(getClass());
 
     @Autowired
+    private CacheService cache;
+
+    @Autowired
     private CurrencyRepository currencyRepository;
 
     @Transactional
@@ -33,9 +36,10 @@ public class CurrencyService {
 
     @Transactional
     public Currency find(String currencyName) throws CurrencyNotFoundException {
-        return this.currencyRepository.findById(currencyName).orElseThrow(() -> new CurrencyNotFoundException(currencyName));
+        Currency currency =this.currencyRepository.findById(currencyName).orElseThrow(() -> new CurrencyNotFoundException(currencyName));
+        currency.setPrice(cache.getCurrentPrice(currencyName));
+        return currency;
     }
-
     public List<String> getAllCurrencySymbols(){
         List<String> symbols = Arrays.asList("ALICEUSDT","MATICUSDT","AXSUSDT","AAVEUSDT","ATOMUSDT","NEOUSDT",
                 "DOTUSDT","ETHUSDT","CAKEUSDT","BTCUSDT","BNBUSDT","ADAUSDT","TRXUSDT",

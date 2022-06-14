@@ -62,7 +62,7 @@ public class InitServiceInMemory {
         List<String> symbols = currencyService.getAllCurrencySymbols();
 
         for(String crypto : symbols){
-            currencyService.save(new Currency(crypto,0));
+            currencyService.save(new Currency(crypto,"0"));
         }
     }
 }
