@@ -13,12 +13,11 @@ public class Intention {
     @Column
     private TransactionType type;
 
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "issuerId")
     private User issuer;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "currencyId")
     private Currency currency;
 
@@ -28,4 +27,36 @@ public class Intention {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public User getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(User issuer) {
+        this.issuer = issuer;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public Date getDate() {
+        return date;
+    }
 }
