@@ -58,7 +58,12 @@ public class CacheService {
         jedis = this.getConnection();
         return jedis.get(symbol);
     }
-    @Scheduled(fixedDelay = 600000)
+    public Currency getCurrentPriceAsCurrency(String symbol){
+        Jedis conection = this.getConnection();
+        Currency currency = new Currency(symbol,jedis.get(symbol));
+        return currency;
+    }
+   @Scheduled(fixedDelay = 600000)
     private void updatePrices(){
         List<Currency> currencies = binance.getAllPrices();
         Jedis conection = this.getConnection();
