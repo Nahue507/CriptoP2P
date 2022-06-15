@@ -140,7 +140,7 @@ public class Transaction {
     }
 
     public boolean sameUser() {
-        return this.getBuyer().getId() == this.getSeller().getId();
+        return this.getBuyer().getId().equals(this.getSeller().getId());
     }
 
     public boolean priceIncreased(){

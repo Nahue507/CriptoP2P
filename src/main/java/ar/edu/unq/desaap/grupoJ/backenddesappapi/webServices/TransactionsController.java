@@ -1,6 +1,7 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Transaction;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dtos.TransactionAcceptanceDTO;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.PriceIncreasedException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.SameUserException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.TransactionException;
@@ -30,17 +31,23 @@ public class TransactionsController {
             Transaction newTransaction = transactionService.saveBuyTransaction(transaction);
             return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
         }
-        catch (TransactionException e){
+        catch (TransactionException | SameUserException | PriceIncreasedException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
-        catch (SameUserException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
-        catch (PriceIncreasedException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Transaction could not be created");
+        }
+    }
+
+    @PostMapping(path = "transactions/accept",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> accept(@RequestBody TransactionAcceptanceDTO dto) {
+        try {
+            transactionService.acceptTransaction(dto.getUserId(), dto.getTransactionId());
+            return ResponseEntity.ok().body("Transaction Accepted");
+        }
+        catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Transaction could not be accepted");
         }
     }
 }

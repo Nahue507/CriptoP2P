@@ -40,18 +40,10 @@ public class TransactionService {
         Intention buyIntention = mapIntention(currency, buyer, saleIntention);
 
         try {
-            transaction.setType(TransactionType.Buy);
-            transaction.setCurrency(currency);
-            transaction.setBuyer(buyer);
-            transaction.setSeller(saleIntention.getIssuer());
-            transaction.setSaleIntention(saleIntention);
-            transaction.setBuyIntention(buyIntention);
-            transaction.setPrice(Float.parseFloat(currency.getPrice()));
-            transaction.setQuantity(buyIntention.getQuantity());
-            transaction.setDate(new Date());
+            mapTransaction(transaction, currency, buyer, saleIntention, buyIntention);
 
             if(transaction.shouldBeCancelled()){
-                transaction.setStatus(TransactionStatus.Canceled);
+                transaction.setStatus(TransactionStatus.Cancelled);
                 buyIntention.setStatus(IntentionStatus.Cancelled);
                 saleIntention.setStatus(IntentionStatus.Cancelled);
             } else {
@@ -73,16 +65,24 @@ public class TransactionService {
             }
             return transactionCreated;
         }
-        catch (SameUserException e) {
+        catch (SameUserException | PriceIncreasedException e) {
             throw e;
-        }
-        catch (PriceIncreasedException e) {
-            throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e);
             throw new TransactionException("Transaction could not be created");
         }
+    }
+
+    private void mapTransaction(Transaction transaction, Currency currency, User buyer, Intention saleIntention, Intention buyIntention) {
+        transaction.setType(TransactionType.Buy);
+        transaction.setCurrency(currency);
+        transaction.setBuyer(buyer);
+        transaction.setSeller(saleIntention.getIssuer());
+        transaction.setSaleIntention(saleIntention);
+        transaction.setBuyIntention(buyIntention);
+        transaction.setPrice(Float.parseFloat(currency.getPrice()));
+        transaction.setQuantity(buyIntention.getQuantity());
+        transaction.setDate(new Date());
     }
 
     private Intention mapIntention(Currency currency, User buyer, Intention saleIntention) {
@@ -100,5 +100,34 @@ public class TransactionService {
     @Transactional
     public List<Transaction> findAll() {
         return (List<Transaction>) this.transactionRepository.findAll();
+    }
+
+    public Transaction find(Integer id) throws TransactionNotFoundException {
+        return this.transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException(id.toString()));
+    }
+
+    @Transactional
+    public void acceptTransaction(Integer userId, Integer transactionId) throws TransactionNotFoundException, UserNotFoundException {
+        User user = this.usersService.find(userId);
+        Transaction transaction = find(transactionId);
+
+        transaction.setStatus(TransactionStatus.Completed);
+        transaction.getSaleIntention().setStatus(IntentionStatus.Completed);
+        transaction.getBuyIntention().setStatus(IntentionStatus.Completed);
+
+        this.transactionRepository.save(transaction);
+        logger.info(MessageFormat.format("Transaction with id: {0} was accepted", transaction.getId()));
+    }
+
+    @Transactional
+    public void cancelTransaction(Integer userId, Integer transactionId) throws TransactionNotFoundException, UserNotFoundException {
+        User user = this.usersService.find(userId);
+        Transaction transaction = find(transactionId);
+
+        transaction.setStatus(TransactionStatus.Cancelled);
+        transaction.getSaleIntention().setStatus(IntentionStatus.Cancelled);
+        transaction.getBuyIntention().setStatus(IntentionStatus.Cancelled);
+
+        this.transactionRepository.save(transaction);
     }
 }
