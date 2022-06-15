@@ -1,20 +1,22 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.QuotationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-@Service
 public class CurrencyConverter {
-    @Autowired
+    private double value;
+    private double factor;
 
-    private QuotationService quotationService;
-
-    public String getPriceArs(String usd){
-        double usdPrice = Double.valueOf(quotationService.getQuotationUSD());
-        double price = Double.valueOf(usd);
-        double res = price * usdPrice;
-        return String.valueOf(res);
+    public void setValue(double value) {
+        this.value = value;
     }
 
+    public void setFactor(double factor) {
+        this.factor = factor;
+    }
+
+    public double Convert(){
+        return value * factor;
+    }
+
+    public double Reverse(){
+        return value / factor;
+    }
 }

@@ -1,8 +1,8 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
 
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Transaction;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.TransactionException;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.TransactionService;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Intention;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.IntentionException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.IntentionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -15,24 +15,24 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @EnableAutoConfiguration
-public class TransactionController {
+public class IntentionsController {
 
     @Autowired
-    private TransactionService transactionService;
+    private IntentionService intentionService;
 
-    @PostMapping(path = "transactions",
+    @PostMapping(path = "intentions",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Transaction> Create(@RequestBody Transaction transaction) {
+    public ResponseEntity<Intention> Create(@RequestBody Intention intention) {
         try {
-            Transaction newTransaction = transactionService.save(transaction);
-            return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
+            Intention newIntention = intentionService.save(intention);
+            return new ResponseEntity<>(newIntention, HttpStatus.CREATED);
         }
-        catch (TransactionException e){
+        catch (IntentionException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
         catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Transaction could not be created");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Intention could not be created");
         }
     }
 }

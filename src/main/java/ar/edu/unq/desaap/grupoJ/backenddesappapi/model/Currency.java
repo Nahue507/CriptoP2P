@@ -1,8 +1,5 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -37,11 +34,7 @@ public class Currency {
         this.symbol = symbol;
     }
 
-    public long getPrice() {
-        return Long.getLong(price);
-    }
-
-    public String getPriceAsString(){
+    public String getPrice(){
         return this.price;
     }
 
