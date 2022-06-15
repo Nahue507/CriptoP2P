@@ -2,16 +2,16 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.CurrencyRepository;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.CurrencyNotFoundException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.quotations.CryptosApiProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.CurrencyNotFoundException;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,32 +29,34 @@ public class CurrencyService {
     @Autowired
     private CacheService cacheService;
 
-    private Currency getCurrencyPrice(String symbol){
+
+    /**
+     * Returns a currency with its price from Crypto API
+     * @param symbol currency symbol
+     */
+    private Currency getCurrencyPriceFromAPI(String symbol){
         String uri = cryptosApiProperties.getUri().concat(symbol);
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(uri,Currency.class);
     }
 
+    /**
+     * @return List of all System Crypto Currencies with their current price from Crypto API
+     */
     public List<Currency> getAllWithPrices(){
         List<Currency> result = new ArrayList<>();
 
         for(String crypto : this.getAllCurrencySymbols()){
-            result.add(this.getCurrencyPrice(crypto));
+            result.add(this.getCurrencyPriceFromAPI(crypto));
         }
 
         return result;
     }
 
     @Transactional
-    public Currency save(Currency newCurrency) {
+    public void save(Currency newCurrency) {
             Currency currencyCreated = currencyRepository.save(newCurrency);
-            logger.info("A new currency was created or was updated");
-            return currencyCreated;
-    }
-
-    @Transactional
-    public List<Currency> findAll() {
-        return (List<Currency>) this.currencyRepository.findAll();
+            logger.info(MessageFormat.format("Currency with symbol: {0} was created or was updated", currencyCreated.getSymbol()));
     }
 
     @Transactional
@@ -62,11 +64,6 @@ public class CurrencyService {
         Currency currency =this.currencyRepository.findById(currencyName).orElseThrow(() -> new CurrencyNotFoundException(currencyName));
         currency.setPrice(cacheService.getCurrentPrice(currencyName));
         return currency;
-    }
-
-    @Scheduled(fixedDelay = 600000)
-    protected void updatePrices(){
-        cacheService.storeCurrencyPrices(this.getAllWithPrices());
     }
 
     public List<String> getAllCurrencySymbols(){

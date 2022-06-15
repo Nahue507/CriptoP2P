@@ -52,6 +52,10 @@ public class CacheService {
         return new Currency(symbol, price);
     }
 
+    /**
+     * Gets current dollar quotation and Stores all received currencies in cache with their price in ARS
+     * @param currencies list of currencies
+     */
     public void storeCurrencyPrices(List<Currency> currencies){
         String dollarQuotation = quotationService.getDollarQuotation();
 
