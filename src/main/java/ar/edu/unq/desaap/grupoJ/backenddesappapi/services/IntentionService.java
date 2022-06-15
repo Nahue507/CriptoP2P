@@ -2,7 +2,7 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Intention;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.IntentionRepository;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.IntentionException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.IntentionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

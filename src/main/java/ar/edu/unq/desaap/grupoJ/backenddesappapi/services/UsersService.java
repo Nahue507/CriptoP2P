@@ -2,8 +2,8 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.User;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.UserRepository;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.UserNotFoundException;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.UsersException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.UserNotFoundException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.UsersException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

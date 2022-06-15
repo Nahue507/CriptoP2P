@@ -1,7 +1,7 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Intention;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.IntentionException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.IntentionException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.IntentionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

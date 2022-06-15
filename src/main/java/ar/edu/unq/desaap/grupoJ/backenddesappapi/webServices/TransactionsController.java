@@ -1,7 +1,7 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Transaction;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.TransactionException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.TransactionException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

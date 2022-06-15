@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.CurrencyNotFoundException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.CurrencyNotFoundException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;

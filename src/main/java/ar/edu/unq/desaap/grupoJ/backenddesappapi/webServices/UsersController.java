@@ -1,7 +1,7 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.User;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.Exceptions.UsersException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.UsersException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
