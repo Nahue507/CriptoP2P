@@ -1,5 +1,7 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,13 +19,14 @@ public class Currency {
     private String price;
 
     @OneToMany(mappedBy = "currency")
+    @JsonIgnore
     private Set<UserCurrency> users;
 
     public Currency(){}
 
     public Currency(String symbol, String price){
-        this.price=price;
-        this.symbol=symbol;
+        this.price = price;
+        this.symbol = symbol;
     }
 
     public String getSymbol() {

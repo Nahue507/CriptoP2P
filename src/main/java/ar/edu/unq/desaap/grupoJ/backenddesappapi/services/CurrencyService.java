@@ -2,6 +2,7 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.CurrencyRepository;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.quotations.CryptosApiProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,16 @@ public class CurrencyService {
     protected final Log logger = LogFactory.getLog(getClass());
 
     @Autowired
+    private CryptosApiProperties cryptosApiProperties;
+
+    @Autowired
     private CurrencyRepository currencyRepository;
 
     @Autowired
     private CacheService cacheService;
 
     private Currency getCurrencyPrice(String symbol){
-        String uri = "https://api1.binance.com/api/v3/ticker/price?symbol=";
-        uri = uri.concat(symbol);
+        String uri = cryptosApiProperties.getUri().concat(symbol);
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(uri,Currency.class);
     }

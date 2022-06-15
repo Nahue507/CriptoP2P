@@ -1,11 +1,11 @@
-package ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dollarQuotation;
+package ar.edu.unq.desaap.grupoJ.backenddesappapi.services.quotations;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@ConfigurationProperties(prefix = "dollar.quotation.api")
-@Configuration("dollarApiProperties")
-public class DollarApiProperties {
+@ConfigurationProperties(prefix = "cryptos.quotation.api")
+@Configuration("cryptosApiProperties")
+public class CryptosApiProperties {
 
     private String uri;
 
