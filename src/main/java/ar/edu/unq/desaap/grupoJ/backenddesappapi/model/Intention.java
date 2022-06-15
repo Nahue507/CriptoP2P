@@ -25,8 +25,13 @@ public class Intention {
     private float price;
 
     @Column
-    @Temporal(TemporalType.TIMESTAMP)
+    private float quantity;
+
+    @Column
     private Date date;
+
+    @Column
+    private IntentionStatus status;
 
     public Integer getId() {
         return id;
@@ -52,11 +57,35 @@ public class Intention {
         this.currency = currency;
     }
 
+    public float getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(float quantity) {
+        this.quantity = quantity;
+    }
+
     public float getPrice() {
         return price;
     }
 
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
     public Date getDate() {
         return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public IntentionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(IntentionStatus status) {
+        this.status = status;
     }
 }
