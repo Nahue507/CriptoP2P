@@ -9,7 +9,6 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 public class UserTest {
 
     @Test
@@ -100,7 +99,6 @@ public class UserTest {
         assertTrue(user.isValidEmail());
     }
 
-
     @Test
     public void testUserCorrectLengthName() {
         User user = new User();
@@ -108,6 +106,7 @@ public class UserTest {
         System.out.println(user.getName().length());
         assertTrue(user.isValidName());
     }
+
        @Test
     public void testUserCorrectLastName() {
         User user = new User();
@@ -116,7 +115,6 @@ public class UserTest {
         assertTrue(user.isValidLastName());
     }
 
-
     @Test
     public void testUserCorrectLengthAddress() {
         User user = new User();
@@ -124,7 +122,6 @@ public class UserTest {
 
         assertTrue(user.isValidAddress());
     }
-
 
     @Test
     public void testUserValidCVU() {
@@ -142,9 +139,6 @@ public class UserTest {
         assertTrue(user.isValidWallet());
     }
 
-
-
-
     private String GetRandomStringOfLengthOnlyLetters(Integer length){
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
@@ -157,6 +151,7 @@ public class UserTest {
                 .toString();
         return generatedString;
     }
+
     private String GetRandomStringNumericOfLength(Integer length){
        String number= RandomStringUtils.randomNumeric(length);
        return number;

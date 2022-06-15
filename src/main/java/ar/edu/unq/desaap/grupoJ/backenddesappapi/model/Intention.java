@@ -41,6 +41,10 @@ public class Intention {
         return type;
     }
 
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+
     public User getIssuer() {
         return issuer;
     }

@@ -1,6 +1,8 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Transaction;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.PriceIncreasedException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.SameUserException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.TransactionException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +22,21 @@ public class TransactionsController {
     @Autowired
     private TransactionService transactionService;
 
-    @PostMapping(path = "transactions",
+    @PostMapping(path = "transactions/buy",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Transaction> Create(@RequestBody Transaction transaction) {
+    public ResponseEntity<Transaction> Buy(@RequestBody Transaction transaction) {
         try {
-            Transaction newTransaction = transactionService.save(transaction);
+            Transaction newTransaction = transactionService.saveBuyTransaction(transaction);
             return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
         }
         catch (TransactionException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        catch (SameUserException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        catch (PriceIncreasedException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
         catch (Exception e) {

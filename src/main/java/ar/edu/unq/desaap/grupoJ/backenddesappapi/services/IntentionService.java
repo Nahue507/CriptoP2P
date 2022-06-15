@@ -5,6 +5,7 @@ import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Intention;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.IntentionStatus;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.IntentionRepository;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.IntentionException;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.IntentionNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,9 @@ public class IntentionService {
     @Transactional
     public List<Intention> findAll() {
         return (List<Intention>) this.intentionRepository.findAll();
+    }
+
+    public Intention find(Integer id) throws IntentionNotFoundException {
+        return this.intentionRepository.findById(id).orElseThrow(() -> new IntentionNotFoundException(id.toString()));
     }
 }
