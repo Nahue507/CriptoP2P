@@ -1,6 +1,7 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Currency;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.redis.RedisProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -13,6 +14,9 @@ import java.util.List;
 public class CacheService {
 
     @Autowired
+    private RedisProperties redisProperties;
+
+    @Autowired
     private QuotationService quotationService;
 
     private Jedis jedis;
@@ -20,9 +24,9 @@ public class CacheService {
     private JedisPool pool;
 
     public Jedis getConnection() {
-        pool = new JedisPool(new JedisPoolConfig(), "redis-18204.c56.east-us.azure.cloud.redislabs.com",18204);
+        pool = new JedisPool(new JedisPoolConfig(), redisProperties.getHost() ,redisProperties.getPort());
         jedis = pool.getResource();
-        jedis.auth("tTcCCmGqmRpA0zhfONjQzE1KUPmY3YWx");
+        jedis.auth(redisProperties.getAuth());
         return jedis;
     }
 

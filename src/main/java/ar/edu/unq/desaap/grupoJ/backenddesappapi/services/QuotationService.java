@@ -1,16 +1,22 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.USD;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dollarQuotation.DollarApiProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 
 @Service
 public class QuotationService {
 
-    private CurrencyConverter converter = new CurrencyConverter();
+    @Autowired
+    private DollarApiProperties dollarApiProperties;
+
+    private final CurrencyConverter converter = new CurrencyConverter();
 
     private String getDollarQuotation(){
-        String uri = "https://api-dolar-argentina.herokuapp.com/api/dolaroficial";
+        String uri = dollarApiProperties.getUri();
         RestTemplate restTemplate = new RestTemplate();
         USD usd = restTemplate.getForObject(uri, USD.class);
         return usd != null ? usd.getPrice() : null;
