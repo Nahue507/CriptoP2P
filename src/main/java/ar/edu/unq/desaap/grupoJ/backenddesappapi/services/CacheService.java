@@ -53,8 +53,10 @@ public class CacheService {
     }
 
     public void storeCurrencyPrices(List<Currency> currencies){
+        String dollarQuotation = quotationService.getDollarQuotation();
+
         for(Currency crypto : currencies){
-            jedis.set(crypto.getSymbol(), quotationService.getPriceArs(crypto.getPrice()));
+            jedis.set(crypto.getSymbol(), quotationService.convert(crypto.getPrice(), dollarQuotation));
         }
         this.destroyPool();
     }
