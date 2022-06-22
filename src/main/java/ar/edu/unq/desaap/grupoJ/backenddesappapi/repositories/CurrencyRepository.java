@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Configuration
 @Repository
-
 public interface CurrencyRepository extends CrudRepository<Currency, String> {
 }
