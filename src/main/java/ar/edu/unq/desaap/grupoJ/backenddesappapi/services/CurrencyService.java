@@ -1,9 +1,13 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Currency;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.QuotationHistory;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.CurrencyRepository;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.QuotationRepository;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dtos.QuotationHistoryDTO;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.CurrencyNotFoundException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.quotations.CryptosApiProperties;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,9 @@ import org.springframework.web.client.RestTemplate;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CurrencyService {
@@ -25,6 +31,9 @@ public class CurrencyService {
 
     @Autowired
     private CurrencyRepository currencyRepository;
+
+    @Autowired
+    private QuotationRepository quotationRepository;
 
     @Autowired
     private CacheService cacheService;
@@ -59,11 +68,23 @@ public class CurrencyService {
             logger.info(MessageFormat.format("Currency with symbol: {0} was created or was updated", currencyCreated.getSymbol()));
     }
 
-    @Transactional
+
     public Currency find(String currencyName) throws CurrencyNotFoundException {
         Currency currency =this.currencyRepository.findById(currencyName).orElseThrow(() -> new CurrencyNotFoundException(currencyName));
         currency.setPrice(cacheService.getCurrentPrice(currencyName));
         return currency;
+    }
+
+    public List<QuotationHistoryDTO> getLastQuotations(String symbol) {
+        Date date = DateUtils.addHours(new Date(),-24);
+
+        List<QuotationHistory> list = quotationRepository.getLastQuotations(symbol, date);
+
+        return list.stream().map(x -> new QuotationHistoryDTO(
+                    x.getCurrency().getSymbol(),
+                    x.getQuotation(),
+                    x.getDate()))
+                .collect(Collectors.toList());
     }
 
     public List<String> getAllCurrencySymbols(){

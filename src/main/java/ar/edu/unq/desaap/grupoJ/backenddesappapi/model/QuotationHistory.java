@@ -25,6 +25,8 @@ public class QuotationHistory {
         return date;
     }
 
+    public QuotationHistory(){}
+
     public QuotationHistory(Date date, Currency currency, Float quotation) {
         this.date = date;
         this.currency = currency;
