@@ -3,6 +3,7 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.webServices;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.User;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.CurrencyService;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dtos.UserDTO;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.CurrencyNotFoundException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.UsersException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.UsersService;
@@ -44,17 +45,11 @@ public class InitServiceInMemory {
         createUsers();
     }
 
-    private void createUsers() throws UsersException, CurrencyNotFoundException {
-        Currency alice = currencyService.find("ALICEUSDT");
-        Currency matic = currencyService.find("MATICUSDT");
-
-        User user1 = new User("Nahuel", "Gomez", "nahuelgomez@abc.com", "calle 1123" , "Martin123#","1234567890123456789012","12345678" );
-        user1.addCurrency(alice, 1000);
+    private void createUsers() throws UsersException {
+        UserDTO user1 = new UserDTO("Nahuel", "Gomez", "nahuelgomez@abc.com", "calle 1123" , "Martin123#","1234567890123456789012","12345678" );
         usersService.save(user1);
 
-        User user2 = new User("User", "Test", "usertest@abc.com", "calle test" , "Test1234#","1234567899923456789012","87654321" );
-        user2.addCurrency(alice, 2000);
-        user2.addCurrency(matic, 500);
+        UserDTO user2 = new UserDTO("User", "Test", "usertest@abc.com", "calle test" , "Test1234#","1234567899923456789012","87654321" );
         usersService.save(user2);
     }
 

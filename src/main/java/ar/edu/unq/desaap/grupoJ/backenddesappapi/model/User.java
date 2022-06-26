@@ -105,6 +105,14 @@ public class User {
         this.wallet = wallet;
     }
 
+    public Long getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(Long reputation) {
+        this.reputation = reputation;
+    }
+
     public Set<UserCurrency> getCurrencies() {
         return currencies;
     }

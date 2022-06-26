@@ -2,6 +2,8 @@ package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.User;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.UserRepository;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dtos.UserDTO;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dtos.UserDetailsDTO;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.UserNotFoundException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.UsersException;
 import org.apache.commons.logging.Log;
@@ -12,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UsersService {
 
@@ -21,12 +25,13 @@ public class UsersService {
     private UserRepository userRepository;
 
     @Transactional
-    public User save(User newUser) throws UsersException {
+    public UserDetailsDTO save(UserDTO userDTO) throws UsersException {
         try {
-            newUser.testIsValid();
-            User userCreated = userRepository.save(newUser);
-            logger.info(MessageFormat.format("User with id: {0} was created", newUser.getId()));
-            return userCreated;
+            User user = mapUser(userDTO);
+            user.testIsValid();
+            User userCreated = userRepository.save(user);
+            logger.info(MessageFormat.format("User with id: {0} was created", user.getId()));
+            return mapUserDetailsDTO(userCreated);
         } catch (UsersException e) {
             logger.error(e);
             throw e;
@@ -35,9 +40,37 @@ public class UsersService {
             throw new UsersException("User could not be created");
         }
     }
+
     @Transactional
-    public List<User> findAll() {
-        return (List<User>) this.userRepository.findAll();
+    public List<UserDetailsDTO> findAll() {
+        List<User> list = (List<User>) this.userRepository.findAll();
+
+        return list.stream().map(x -> mapUserDetailsDTO(x))
+                .collect(Collectors.toList());
+    }
+
+    private User mapUser(UserDTO userDTO) {
+        return new User(
+                userDTO.name,
+                userDTO.lastname,
+                userDTO.email,
+                userDTO.address,
+                userDTO.password,
+                userDTO.cvu,
+                userDTO.wallet
+        );
+    }
+
+    private UserDetailsDTO mapUserDetailsDTO(User x) {
+        return new UserDetailsDTO(
+                x.getId(),
+                x.getName(),
+                x.getLastname(),
+                x.getEmail(),
+                x.getAddress(),
+                x.getCvu(),
+                x.getWallet(),
+                x.getReputation());
     }
 
     @Transactional
