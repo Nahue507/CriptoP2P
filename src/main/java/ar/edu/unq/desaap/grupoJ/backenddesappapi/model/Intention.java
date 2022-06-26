@@ -33,6 +33,19 @@ public class Intention {
     @Column
     private IntentionStatus status;
 
+    public Intention() {
+    }
+
+    public Intention(TransactionType type, User issuer, Currency currency, float price, float quantity, Date date, IntentionStatus status) {
+        this.type = type;
+        this.issuer = issuer;
+        this.currency = currency;
+        this.price = price;
+        this.quantity = quantity;
+        this.date = date;
+        this.status = status;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -1,9 +1,9 @@
 package ar.edu.unq.desaap.grupoJ.backenddesappapi.services;
 
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Currency;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.Intention;
-import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.IntentionStatus;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.model.*;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.repositories.IntentionRepository;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dtos.IntentionDTO;
+import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.dtos.IntentionDetailsDTO;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.IntentionException;
 import ar.edu.unq.desaap.grupoJ.backenddesappapi.services.exceptions.IntentionNotFoundException;
 import org.apache.commons.logging.Log;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class IntentionService {
@@ -30,22 +31,26 @@ public class IntentionService {
     private CurrencyService currencyService;
 
     @Transactional
-    public Intention save(Intention intention) throws IntentionException {
+    public IntentionDetailsDTO save(IntentionDTO intentionDTO) throws IntentionException {
         try {
-            Currency currency = currencyService.find(intention.getCurrency().getSymbol());
+            Currency currency = currencyService.find(intentionDTO.currencySymbol);
 
-            intention.setIssuer(usersService.find(intention.getIssuer().getId()));
-            intention.setCurrency(currency);
-            intention.setPrice(Float.parseFloat(currency.getPrice()));
-            intention.setDate(new Date());
-            intention.setStatus(IntentionStatus.Active);
+            Intention intention = new Intention(
+                    intentionDTO.type,
+                    usersService.find(intentionDTO.issuerId),
+                    currency,
+                    Float.parseFloat(currency.getPrice()),
+                    intentionDTO.quantity,
+                    new Date(),
+                    IntentionStatus.Active
+            );
 
             Intention intentionCreated = intentionRepository.save(intention);
             logger.info(MessageFormat.format("Intention with id: {0} with type: {1} was created",
                     intentionCreated.getId(),
                     intention.getType())
             );
-            return intentionCreated;
+            return getIntentionDetailsDTO(intentionCreated);
         } catch (Exception e) {
             logger.error(e);
             throw new IntentionException("Intention could not be created");
@@ -53,8 +58,22 @@ public class IntentionService {
     }
 
     @Transactional
-    public List<Intention> findAll() {
-        return (List<Intention>) this.intentionRepository.findAll();
+    public List<IntentionDetailsDTO> findAllWithStatus(TransactionType type, IntentionStatus status) {
+        List<Intention> list = this.intentionRepository.findAllWithTypeAndStatus(type, status);
+
+        return list.stream().map(x -> getIntentionDetailsDTO(x))
+                .collect(Collectors.toList());
+    }
+
+    private IntentionDetailsDTO getIntentionDetailsDTO(Intention x) {
+        return new IntentionDetailsDTO(
+                x.getType(),
+                x.getIssuer().getEmail(),
+                x.getCurrency().getSymbol(),
+                x.getPrice(),
+                x.getQuantity(),
+                x.getDate(),
+                x.getStatus());
     }
 
     public Intention find(Integer id) throws IntentionNotFoundException {

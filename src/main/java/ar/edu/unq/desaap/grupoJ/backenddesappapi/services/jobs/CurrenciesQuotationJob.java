@@ -21,7 +21,7 @@ public class CurrenciesQuotationJob {
     @Autowired
     private CacheService cacheService;
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 600000)
     protected void updatePrices(){
         //Get prices
         List<Currency> currencyList = currencyService.getAllWithPrices();

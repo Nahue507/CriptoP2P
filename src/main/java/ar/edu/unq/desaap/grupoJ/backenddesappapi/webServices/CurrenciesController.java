@@ -22,7 +22,6 @@ public class CurrenciesController {
     @Autowired
     private CurrencyService currencyService;
 
-
     @GetMapping("/allPrices")
     public ResponseEntity<List<Currency>> getAllCurrencies(){
         List<Currency> result = new ArrayList<>();
