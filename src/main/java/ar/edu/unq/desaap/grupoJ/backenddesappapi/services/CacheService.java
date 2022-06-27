@@ -57,6 +57,7 @@ public class CacheService {
      * @param currencies list of currencies
      */
     public void storeCurrencyPrices(List<Currency> currencies){
+        jedis = this.getConnection();
         String dollarQuotation = quotationService.getDollarQuotation();
 
         for(Currency crypto : currencies){
