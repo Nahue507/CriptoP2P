@@ -2,6 +2,8 @@ package ar.edu.unq.desaap.grupoj.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.*;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.repositories.TransactionRepository;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionBuyDTO;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionDetailsDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,17 +32,17 @@ public class TransactionService {
     private IntentionService intentionService;
 
     @Transactional
-    public Transaction saveBuyTransaction(Transaction transaction)
+    public TransactionDetailsDTO saveBuyTransaction(TransactionBuyDTO transactionDTO)
             throws TransactionException, CurrencyNotFoundException,
             UserNotFoundException, IntentionNotFoundException,
             SameUserException, PriceIncreasedException {
-        Currency currency = currencyService.find(transaction.getCurrency().getSymbol());
-        User buyer = usersService.find(transaction.getBuyer().getId());
-        Intention saleIntention = intentionService.find(transaction.getSaleIntention().getId());
+        Currency currency = currencyService.find(transactionDTO.currencySymbol);
+        User buyer = usersService.find(transactionDTO.buyerId);
+        Intention saleIntention = intentionService.find(transactionDTO.saleIntentionId);
         Intention buyIntention = mapIntention(currency, buyer, saleIntention);
 
         try {
-            mapTransaction(transaction, currency, buyer, saleIntention, buyIntention);
+            Transaction transaction = mapBuyTransaction(currency, buyer, saleIntention, buyIntention);
 
             if(transaction.shouldBeCancelled()){
                 transaction.setStatus(TransactionStatus.CANCELLED);
@@ -48,6 +50,8 @@ public class TransactionService {
                 saleIntention.setStatus(IntentionStatus.CANCELLED);
             } else {
                 transaction.setStatus(TransactionStatus.TO_BE_CONFIRMED);
+                buyIntention.setStatus(IntentionStatus.IN_PROCESS);
+                saleIntention.setStatus(IntentionStatus.IN_PROCESS);
             }
 
             Transaction transactionCreated = transactionRepository.save(transaction);
@@ -63,7 +67,7 @@ public class TransactionService {
             if(transaction.priceIncreased()){
                 throw new PriceIncreasedException("The price increased and the Transaction is Cancelled");
             }
-            return transactionCreated;
+            return new TransactionDetailsDTO(transactionCreated);
         }
         catch (SameUserException | PriceIncreasedException e) {
             throw e;
@@ -73,7 +77,8 @@ public class TransactionService {
         }
     }
 
-    private void mapTransaction(Transaction transaction, Currency currency, User buyer, Intention saleIntention, Intention buyIntention) {
+    private Transaction mapBuyTransaction(Currency currency, User buyer, Intention saleIntention, Intention buyIntention) {
+        Transaction transaction = new Transaction();
         transaction.setType(TransactionType.BUY);
         transaction.setCurrency(currency);
         transaction.setBuyer(buyer);
@@ -83,6 +88,7 @@ public class TransactionService {
         transaction.setPrice(Float.parseFloat(currency.getPrice()));
         transaction.setQuantity(buyIntention.getQuantity());
         transaction.setDate(new Date());
+        return transaction;
     }
 
     private Intention mapIntention(Currency currency, User buyer, Intention saleIntention) {
@@ -97,7 +103,6 @@ public class TransactionService {
         return buyIntention;
     }
 
-    @Transactional
     public List<Transaction> findAll() {
         return (List<Transaction>) this.transactionRepository.findAll();
     }

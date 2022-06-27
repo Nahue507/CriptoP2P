@@ -50,7 +50,7 @@ public class IntentionService {
                     intentionCreated.getId(),
                     intention.getType())
             );
-            return getIntentionDetailsDTO(intentionCreated);
+            return new IntentionDetailsDTO(intentionCreated);
         } catch (Exception e) {
             logger.error(e);
             throw new IntentionException("Intention could not be created");
@@ -61,19 +61,8 @@ public class IntentionService {
     public List<IntentionDetailsDTO> findAllWithStatus(TransactionType type, IntentionStatus status) {
         List<Intention> list = this.intentionRepository.findAllWithTypeAndStatus(type, status);
 
-        return list.stream().map(x -> getIntentionDetailsDTO(x))
+        return list.stream().map(IntentionDetailsDTO::new)
                 .collect(Collectors.toList());
-    }
-
-    private IntentionDetailsDTO getIntentionDetailsDTO(Intention x) {
-        return new IntentionDetailsDTO(
-                x.getType(),
-                x.getIssuer().getEmail(),
-                x.getCurrency().getSymbol(),
-                x.getPrice(),
-                x.getQuantity(),
-                x.getDate(),
-                x.getStatus());
     }
 
     public Intention find(Integer id) throws IntentionNotFoundException {

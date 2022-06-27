@@ -1,11 +1,12 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.webServices;
 
-import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Transaction;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.TransactionService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionAcceptanceDTO;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionBuyDTO;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionDetailsDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.PriceIncreasedException;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.SameUserException;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.TransactionException;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -26,10 +27,10 @@ public class TransactionsController {
     @PostMapping(path = "transactions/buy",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Transaction> Buy(@RequestBody Transaction transaction) {
+    public ResponseEntity<TransactionDetailsDTO> Buy(@RequestBody TransactionBuyDTO transactionDTO) {
         try {
-            Transaction newTransaction = transactionService.saveBuyTransaction(transaction);
-            return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
+            TransactionDetailsDTO transaction = transactionService.saveBuyTransaction(transactionDTO);
+            return new ResponseEntity<>(transaction, HttpStatus.CREATED);
         }
         catch (TransactionException | SameUserException | PriceIncreasedException e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
