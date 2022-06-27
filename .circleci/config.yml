@@ -22,6 +22,7 @@ jobs:
 deploy:
     steps:
       - checkout
+      - heroku/install
       - run:
           name: Deploy Master to Heroku
           command: |        
