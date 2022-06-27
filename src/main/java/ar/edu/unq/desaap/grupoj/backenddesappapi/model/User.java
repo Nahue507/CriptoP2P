@@ -43,7 +43,7 @@ public class User {
     private Long reputation;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<UserCurrency> currencies;
+    private final Set<UserCurrency> currencies;
 
     public Integer getId() {
         return id;
@@ -81,14 +81,6 @@ public class User {
         this.address = address;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getCvu() {
         return cvu;
     }
@@ -111,14 +103,6 @@ public class User {
 
     public void setReputation(Long reputation) {
         this.reputation = reputation;
-    }
-
-    public Set<UserCurrency> getCurrencies() {
-        return currencies;
-    }
-
-    public void setCurrencies(Set<UserCurrency> currencies) {
-        this.currencies = currencies;
     }
 
     public User() {
@@ -195,10 +179,6 @@ public class User {
     public boolean isValidPassword(){
         Matcher matcher = VALID_PASSWORD_REGEX.matcher(this.password);
         return matcher.find();
-    }
-
-    public void addCurrency(Currency currency, float quantity){
-        this.currencies.add(new UserCurrency(this, currency, quantity));
     }
 
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =

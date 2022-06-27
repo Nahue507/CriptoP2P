@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class UserTest {
 
     @Test
-    public void testUserEmailWithoutAtShouldFail() {
+    void testUserEmailWithoutAtShouldFail() {
         User user = new User();
         user.setEmail("pepito.hotmail.com");
 
@@ -20,7 +20,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserEmailWithoutDomainShouldFail() {
+    void testUserEmailWithoutDomainShouldFail() {
         User user = new User();
         user.setEmail("pepito@hotmail");
 
@@ -28,7 +28,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserShortNameLengthShouldFail() {
+    void testUserShortNameLengthShouldFail() {
         User user = new User();
         user.setName(GetRandomStringOfLengthOnlyLetters(2));
 
@@ -36,7 +36,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserLongNameLengthShouldFail() {
+    void testUserLongNameLengthShouldFail() {
         User user = new User();
         user.setName(GetRandomStringOfLengthOnlyLetters(31));
 
@@ -44,7 +44,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserShortLastNameLengthShouldFail() {
+    void testUserShortLastNameLengthShouldFail() {
         User user = new User();
         user.setLastname(GetRandomStringOfLengthOnlyLetters(2));
 
@@ -52,7 +52,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserLongLastNameLengthShouldFail() {
+    void testUserLongLastNameLengthShouldFail() {
         User user = new User();
         user.setLastname(GetRandomStringOfLengthOnlyLetters(31));
 
@@ -60,7 +60,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserShortAddressLengthShouldFail() {
+    void testUserShortAddressLengthShouldFail() {
         User user = new User();
         user.setAddress(GetRandomStringOfLengthOnlyLetters(9));
 
@@ -68,7 +68,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserLongAddressLengthShouldFail() {
+    void testUserLongAddressLengthShouldFail() {
         User user = new User();
         user.setAddress(GetRandomStringOfLengthOnlyLetters(21));
 
@@ -76,7 +76,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserInvalidCVULengthShouldFail() {
+    void testUserInvalidCVULengthShouldFail() {
         User user = new User();
         user.setCvu(GetRandomStringOfLengthOnlyLetters(21));
 
@@ -84,7 +84,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserInvalidWalletLengthShouldFail() {
+    void testUserInvalidWalletLengthShouldFail() {
         User user = new User();
         user.setWallet(GetRandomStringOfLengthOnlyLetters(7));
 
@@ -92,7 +92,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserWithCorrectEmail() {
+    void testUserWithCorrectEmail() {
         User user = new User();
         user.setEmail("pepito@hotmail.com");
 
@@ -100,15 +100,15 @@ public class UserTest {
     }
 
     @Test
-    public void testUserCorrectLengthName() {
+    void testUserCorrectLengthName() {
         User user = new User();
         user.setName(GetRandomStringOfLengthOnlyLetters(10));
         System.out.println(user.getName().length());
         assertTrue(user.isValidName());
     }
 
-       @Test
-    public void testUserCorrectLastName() {
+    @Test
+    void testUserCorrectLastName() {
         User user = new User();
         user.setLastname(GetRandomStringOfLengthOnlyLetters(10));
 
@@ -116,15 +116,15 @@ public class UserTest {
     }
 
     @Test
-    public void testUserCorrectLengthAddress() {
+    void testUserCorrectLengthAddress() {
         User user = new User();
-        user.setAddress(GetRandomStringOfLengthOnlyLetters(10) +" " + GetRandomStringNumericOfLength(4));
+        user.setAddress(GetRandomStringOfLengthOnlyLetters(10) + " " + GetRandomStringNumericOfLength(4));
 
         assertTrue(user.isValidAddress());
     }
 
     @Test
-    public void testUserValidCVU() {
+    void testUserValidCVU() {
         User user = new User();
         user.setCvu(GetRandomStringNumericOfLength(22));
 
@@ -132,14 +132,14 @@ public class UserTest {
     }
 
     @Test
-    public void testUserValidWalletLength() {
+    void testUserValidWalletLength() {
         User user = new User();
         user.setWallet(GetRandomStringOfLengthOnlyLetters(8));
 
         assertTrue(user.isValidWallet());
     }
 
-    private String GetRandomStringOfLengthOnlyLetters(Integer length){
+    private String GetRandomStringOfLengthOnlyLetters(Integer length) {
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
         int targetStringLength = length;
@@ -151,9 +151,7 @@ public class UserTest {
                 .toString();
     }
 
-    private String GetRandomStringNumericOfLength(Integer length){
+    private String GetRandomStringNumericOfLength(Integer length) {
         return RandomStringUtils.randomNumeric(length);
     }
-
-
 }
