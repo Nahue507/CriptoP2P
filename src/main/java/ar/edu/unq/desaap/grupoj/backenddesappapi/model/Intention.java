@@ -11,6 +11,7 @@ public class Intention {
     private Integer id;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private TransactionType type;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -31,6 +32,7 @@ public class Intention {
     private Date date;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private IntentionStatus status;
 
     public Intention() {

@@ -11,6 +11,7 @@ public class Transaction {
     private Integer id;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private TransactionType type;
 
     @ManyToOne
@@ -43,6 +44,7 @@ public class Transaction {
     private Date date;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
     public Integer getId() {
