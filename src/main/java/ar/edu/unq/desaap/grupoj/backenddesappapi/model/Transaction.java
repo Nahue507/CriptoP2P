@@ -135,8 +135,8 @@ public class Transaction {
 
     public boolean shouldBeCancelled(){
         return sameUser() ||
-                this.type == TransactionType.Buy && priceIncreased() ||
-                this.type == TransactionType.Sale && priceDecreased();
+                this.type == TransactionType.BUY && priceIncreased() ||
+                this.type == TransactionType.SALE && priceDecreased();
     }
 
     public boolean sameUser() {

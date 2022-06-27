@@ -43,11 +43,11 @@ public class TransactionService {
             mapTransaction(transaction, currency, buyer, saleIntention, buyIntention);
 
             if(transaction.shouldBeCancelled()){
-                transaction.setStatus(TransactionStatus.Cancelled);
-                buyIntention.setStatus(IntentionStatus.Cancelled);
-                saleIntention.setStatus(IntentionStatus.Cancelled);
+                transaction.setStatus(TransactionStatus.CANCELLED);
+                buyIntention.setStatus(IntentionStatus.CANCELLED);
+                saleIntention.setStatus(IntentionStatus.CANCELLED);
             } else {
-                transaction.setStatus(TransactionStatus.ToBeConfirmed);
+                transaction.setStatus(TransactionStatus.TO_BE_CONFIRMED);
             }
 
             Transaction transactionCreated = transactionRepository.save(transaction);
@@ -74,7 +74,7 @@ public class TransactionService {
     }
 
     private void mapTransaction(Transaction transaction, Currency currency, User buyer, Intention saleIntention, Intention buyIntention) {
-        transaction.setType(TransactionType.Buy);
+        transaction.setType(TransactionType.BUY);
         transaction.setCurrency(currency);
         transaction.setBuyer(buyer);
         transaction.setSeller(saleIntention.getIssuer());
@@ -87,13 +87,13 @@ public class TransactionService {
 
     private Intention mapIntention(Currency currency, User buyer, Intention saleIntention) {
         Intention buyIntention = new Intention();
-        buyIntention.setType(TransactionType.Buy);
+        buyIntention.setType(TransactionType.BUY);
         buyIntention.setIssuer(buyer);
         buyIntention.setCurrency(currency);
         buyIntention.setPrice(saleIntention.getPrice());
         buyIntention.setQuantity(saleIntention.getQuantity());
         buyIntention.setDate(new Date());
-        buyIntention.setStatus(IntentionStatus.Active);
+        buyIntention.setStatus(IntentionStatus.ACTIVE);
         return buyIntention;
     }
 
@@ -111,9 +111,9 @@ public class TransactionService {
         User user = this.usersService.find(userId);
         Transaction transaction = find(transactionId);
 
-        transaction.setStatus(TransactionStatus.Completed);
-        transaction.getSaleIntention().setStatus(IntentionStatus.Completed);
-        transaction.getBuyIntention().setStatus(IntentionStatus.Completed);
+        transaction.setStatus(TransactionStatus.COMPLETED);
+        transaction.getSaleIntention().setStatus(IntentionStatus.COMPLETED);
+        transaction.getBuyIntention().setStatus(IntentionStatus.COMPLETED);
 
         this.transactionRepository.save(transaction);
         logger.info(MessageFormat.format("Transaction with id: {0} was accepted", transaction.getId()));
@@ -124,9 +124,9 @@ public class TransactionService {
         User user = this.usersService.find(userId);
         Transaction transaction = find(transactionId);
 
-        transaction.setStatus(TransactionStatus.Cancelled);
-        transaction.getSaleIntention().setStatus(IntentionStatus.Cancelled);
-        transaction.getBuyIntention().setStatus(IntentionStatus.Cancelled);
+        transaction.setStatus(TransactionStatus.CANCELLED);
+        transaction.getSaleIntention().setStatus(IntentionStatus.CANCELLED);
+        transaction.getBuyIntention().setStatus(IntentionStatus.CANCELLED);
 
         this.transactionRepository.save(transaction);
     }

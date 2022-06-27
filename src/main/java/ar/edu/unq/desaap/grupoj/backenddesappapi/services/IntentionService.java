@@ -42,7 +42,7 @@ public class IntentionService {
                     Float.parseFloat(currency.getPrice()),
                     intentionDTO.quantity,
                     new Date(),
-                    IntentionStatus.Active
+                    IntentionStatus.ACTIVE
             );
 
             Intention intentionCreated = intentionRepository.save(intention);
