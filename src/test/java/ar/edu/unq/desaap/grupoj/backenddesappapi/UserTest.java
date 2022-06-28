@@ -1,6 +1,7 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi;
 
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UsersException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -91,52 +92,127 @@ public class UserTest {
     }
 
     @Test
-    void testUserWithCorrectEmail() {
+    void testUserInvalidNameShouldThrowException() {
         User user = new User();
-        user.setEmail("pepito@hotmail.com");
+        user.setName(GetRandomStringOfLengthOnlyLetters(2));
 
-        assertTrue(user.isValidEmail());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+
+        String expectedMessage = "Invalid Name length";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
-    void testUserCorrectLengthName() {
+    void testUserInvalidLastNameShouldThrowException() {
         User user = new User();
         user.setName(GetRandomStringOfLengthOnlyLetters(10));
-        System.out.println(user.getName().length());
-        assertTrue(user.isValidName());
+        user.setLastname(GetRandomStringOfLengthOnlyLetters(2));
+
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+
+        String expectedMessage = "Invalid lastname length";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
-    void testUserCorrectLastName() {
+    void testUserWithInvalidEmailThrowException() {
         User user = new User();
+        user.setName(GetRandomStringOfLengthOnlyLetters(10));
         user.setLastname(GetRandomStringOfLengthOnlyLetters(10));
+        user.setEmail("pepito.hotmail.com");
 
-        assertTrue(user.isValidLastName());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+
+        String expectedMessage = "Invalid Email";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
-    void testUserCorrectLengthAddress() {
-        User user = new User();
-        user.setAddress(GetRandomStringOfLengthOnlyLetters(10) + " " + GetRandomStringNumericOfLength(4));
+    void testUserInvalidPasswordShouldThrowException() {
+        User user = new User(
+                GetRandomStringOfLengthOnlyLetters(10),
+                GetRandomStringOfLengthOnlyLetters(10),
+                "pepito@hotmail.com",
+                GetRandomStringOfLengthOnlyLetters(15),
+                "123",
+                "",
+                ""
+        );
 
-        assertTrue(user.isValidAddress());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+
+        String expectedMessage = "Invalid Password";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
-    void testUserValidCVU() {
-        User user = new User();
-        user.setCvu(GetRandomStringNumericOfLength(22));
+    void testUserInvalidAddressShouldThrowException() {
+        User user = new User(
+                GetRandomStringOfLengthOnlyLetters(10),
+                GetRandomStringOfLengthOnlyLetters(10),
+                "pepito@hotmail.com",
+                GetRandomStringOfLengthOnlyLetters(9),
+                "Abc123$",
+                "",
+                ""
+        );
 
-        assertTrue(user.isValidCVU());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+
+        String expectedMessage = "Invalid Address length";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
-    void testUserValidWalletLength() {
-        User user = new User();
-        user.setWallet(GetRandomStringOfLengthOnlyLetters(8));
+    void testUserInvalidCVUShouldThrowException() {
+        User user = new User(
+                GetRandomStringOfLengthOnlyLetters(10),
+                GetRandomStringOfLengthOnlyLetters(10),
+                "pepito@hotmail.com",
+                GetRandomStringOfLengthOnlyLetters(15),
+                "Abc123$",
+                GetRandomStringOfLengthOnlyLetters(21),
+                GetRandomStringOfLengthOnlyLetters(8)
+        );
 
-        assertTrue(user.isValidWallet());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+
+        String expectedMessage = "Invalid CVU length";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
+
+    @Test
+    void testUserInvalidWalletShouldThrowException() {
+        User user = new User(
+                GetRandomStringOfLengthOnlyLetters(10),
+                GetRandomStringOfLengthOnlyLetters(10),
+                "pepito@hotmail.com",
+                GetRandomStringOfLengthOnlyLetters(15),
+                "Abc123$",
+                GetRandomStringOfLengthOnlyLetters(22),
+                GetRandomStringOfLengthOnlyLetters(7)
+        );
+
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+
+        String expectedMessage = "Invalid Wallet length";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
 
     @Test
     void testTransactionStartInZero() {
