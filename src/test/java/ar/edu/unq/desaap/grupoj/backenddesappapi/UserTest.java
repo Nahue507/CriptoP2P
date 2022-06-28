@@ -2,7 +2,6 @@ package ar.edu.unq.desaap.grupoj.backenddesappapi;
 
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UsersException;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -93,126 +92,65 @@ public class UserTest {
 
     @Test
     void testUserInvalidNameShouldThrowException() {
-        User user = new User();
+        User user = getValidUser();
         user.setName(GetRandomStringOfLengthOnlyLetters(2));
 
         Exception exception = assertThrows(UsersException.class, user::testIsValid);
-
-        String expectedMessage = "Invalid Name length";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(exception.getMessage().contains("Invalid Name length"));
     }
 
     @Test
     void testUserInvalidLastNameShouldThrowException() {
-        User user = new User();
-        user.setName(GetRandomStringOfLengthOnlyLetters(10));
+        User user = getValidUser();
         user.setLastname(GetRandomStringOfLengthOnlyLetters(2));
 
         Exception exception = assertThrows(UsersException.class, user::testIsValid);
-
-        String expectedMessage = "Invalid lastname length";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(exception.getMessage().contains("Invalid lastname length"));
     }
 
     @Test
     void testUserWithInvalidEmailThrowException() {
-        User user = new User();
-        user.setName(GetRandomStringOfLengthOnlyLetters(10));
-        user.setLastname(GetRandomStringOfLengthOnlyLetters(10));
+        User user = getValidUser();
         user.setEmail("pepito.hotmail.com");
 
         Exception exception = assertThrows(UsersException.class, user::testIsValid);
-
-        String expectedMessage = "Invalid Email";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(exception.getMessage().contains("Invalid Email"));
     }
 
     @Test
     void testUserInvalidPasswordShouldThrowException() {
-        User user = new User(
-                GetRandomStringOfLengthOnlyLetters(10),
-                GetRandomStringOfLengthOnlyLetters(10),
-                "pepito@hotmail.com",
-                GetRandomStringOfLengthOnlyLetters(15),
-                "123",
-                "",
-                ""
-        );
+        User user = getValidUserWithPassword("123");
 
         Exception exception = assertThrows(UsersException.class, user::testIsValid);
-
-        String expectedMessage = "Invalid Password";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(exception.getMessage().contains("Invalid Password"));
     }
 
     @Test
     void testUserInvalidAddressShouldThrowException() {
-        User user = new User(
-                GetRandomStringOfLengthOnlyLetters(10),
-                GetRandomStringOfLengthOnlyLetters(10),
-                "pepito@hotmail.com",
-                GetRandomStringOfLengthOnlyLetters(9),
-                "Abc123$",
-                "",
-                ""
-        );
+        User user = getValidUser();
+        user.setAddress(GetRandomStringOfLengthOnlyLetters(9));
 
         Exception exception = assertThrows(UsersException.class, user::testIsValid);
-
-        String expectedMessage = "Invalid Address length";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(exception.getMessage().contains("Invalid Address length"));
     }
 
     @Test
     void testUserInvalidCVUShouldThrowException() {
-        User user = new User(
-                GetRandomStringOfLengthOnlyLetters(10),
-                GetRandomStringOfLengthOnlyLetters(10),
-                "pepito@hotmail.com",
-                GetRandomStringOfLengthOnlyLetters(15),
-                "Abc123$",
-                GetRandomStringOfLengthOnlyLetters(21),
-                GetRandomStringOfLengthOnlyLetters(8)
-        );
+        User user = getValidUser();
+        user.setCvu(GetRandomStringOfLengthOnlyLetters(21));
 
         Exception exception = assertThrows(UsersException.class, user::testIsValid);
-
-        String expectedMessage = "Invalid CVU length";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(exception.getMessage().contains("Invalid CVU length"));
     }
 
     @Test
     void testUserInvalidWalletShouldThrowException() {
-        User user = new User(
-                GetRandomStringOfLengthOnlyLetters(10),
-                GetRandomStringOfLengthOnlyLetters(10),
-                "pepito@hotmail.com",
-                GetRandomStringOfLengthOnlyLetters(15),
-                "Abc123$",
-                GetRandomStringOfLengthOnlyLetters(22),
-                GetRandomStringOfLengthOnlyLetters(7)
-        );
+        User user = getValidUser();
+        user.setWallet(GetRandomStringOfLengthOnlyLetters(7));
 
         Exception exception = assertThrows(UsersException.class, user::testIsValid);
-
-        String expectedMessage = "Invalid Wallet length";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(exception.getMessage().contains("Invalid Wallet length"));
     }
-
 
     @Test
     void testTransactionStartInZero() {
@@ -274,7 +212,19 @@ public class UserTest {
                 .toString();
     }
 
-    private String GetRandomStringNumericOfLength(Integer length) {
-        return RandomStringUtils.randomNumeric(length);
+    private User getValidUser() {
+        return getValidUserWithPassword("Abc123$");
+    }
+
+    private User getValidUserWithPassword(String password) {
+        return new User(
+                GetRandomStringOfLengthOnlyLetters(10),
+                GetRandomStringOfLengthOnlyLetters(10),
+                "pepito@hotmail.com",
+                GetRandomStringOfLengthOnlyLetters(15),
+                password,
+                GetRandomStringOfLengthOnlyLetters(22),
+                GetRandomStringOfLengthOnlyLetters(8)
+        );
     }
 }
