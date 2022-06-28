@@ -31,7 +31,7 @@ public class UsersService {
             user.testIsValid();
             User userCreated = userRepository.save(user);
             logger.info(MessageFormat.format("User with id: {0} was created", user.getId()));
-            return mapUserDetailsDTO(userCreated);
+            return new UserDetailsDTO(userCreated);
         } catch (UsersException e) {
             logger.error(e);
             throw e;
@@ -45,7 +45,7 @@ public class UsersService {
     public List<UserDetailsDTO> findAll() {
         List<User> list = (List<User>) this.userRepository.findAll();
 
-        return list.stream().map(x -> mapUserDetailsDTO(x))
+        return list.stream().map(UserDetailsDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -59,18 +59,6 @@ public class UsersService {
                 userDTO.cvu,
                 userDTO.wallet
         );
-    }
-
-    private UserDetailsDTO mapUserDetailsDTO(User x) {
-        return new UserDetailsDTO(
-                x.getId(),
-                x.getName(),
-                x.getLastname(),
-                x.getEmail(),
-                x.getAddress(),
-                x.getCvu(),
-                x.getWallet(),
-                x.getReputation());
     }
 
     @Transactional

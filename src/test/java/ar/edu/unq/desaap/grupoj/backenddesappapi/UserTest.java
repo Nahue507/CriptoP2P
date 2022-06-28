@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
@@ -137,6 +136,54 @@ public class UserTest {
         user.setWallet(GetRandomStringOfLengthOnlyLetters(8));
 
         assertTrue(user.isValidWallet());
+    }
+
+    @Test
+    void testTransactionStartInZero() {
+        User user = new User();
+        assertEquals(0, user.getTransactions());
+    }
+
+    @Test
+    void testUserWithNoTransactionShouldReturnNoReputation() {
+        User user = new User();
+        assertEquals("No Reputation", user.getReputation());
+    }
+
+    @Test
+    void testUserReputationShouldIncrease() {
+        User user = new User();
+        user.addTransaction();
+        user.addReputation(5);
+        user.addTransaction();
+        user.addReputation(10);
+        assertEquals("15", user.getReputation());
+    }
+
+    @Test
+    void testUserReputationShouldDecrease() {
+        User user = new User();
+        user.addTransaction();
+        user.addReputation(50);
+        user.addTransaction();
+        user.addReputation(-10);
+        assertEquals("40", user.getReputation());
+    }
+
+    @Test
+    void testUserReputationCannotBeNegative() {
+        User user = new User();
+        user.addTransaction();
+        user.addReputation(-30);
+        assertEquals("0", user.getReputation());
+    }
+
+    @Test
+    void testAddTransactionCalledTwiceShouldBeTwo() {
+        User user = new User();
+        user.addTransaction();
+        user.addTransaction();
+        assertEquals(2, user.getTransactions());
     }
 
     private String GetRandomStringOfLengthOnlyLetters(Integer length) {
