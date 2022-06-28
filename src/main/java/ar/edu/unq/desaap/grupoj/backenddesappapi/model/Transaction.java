@@ -135,7 +135,7 @@ public class Transaction {
         this.status = status;
     }
 
-    public boolean shouldBeCancelled(){
+    public boolean shouldBeCancelled() {
         return sameUser() ||
                 this.type == TransactionType.BUY && priceIncreased() ||
                 this.type == TransactionType.SALE && priceDecreased();
@@ -145,13 +145,13 @@ public class Transaction {
         return this.getBuyer().getId().equals(this.getSeller().getId());
     }
 
-    public boolean priceIncreased(){
-        int result = Float.compare(this.price,this.saleIntention.getPrice());
-        return result > 0;
+    public boolean priceIncreased() {
+        float percentage = (this.price - this.saleIntention.getPrice()) / 100;
+        return percentage > 0.05;
     }
 
-    public boolean priceDecreased(){
-        int result = Float.compare(this.price,this.buyIntention.getPrice());
-        return result < 0;
+    public boolean priceDecreased() {
+        float percentage = (this.price - this.saleIntention.getPrice()) / 100;
+        return percentage < -0.05;
     }
 }
