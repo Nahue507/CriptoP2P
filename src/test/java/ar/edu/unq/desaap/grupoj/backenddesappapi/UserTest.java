@@ -1,6 +1,8 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.UserCurrency;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UsersException;
 import org.junit.jupiter.api.Test;
 
@@ -198,6 +200,21 @@ public class UserTest {
         user.addTransaction();
         user.addTransaction();
         assertEquals(2, user.getTransactions());
+    }
+
+    @Test
+    void testUserCurrencies() {
+        User user = getValidUser();
+        user.setLastname("Test");
+
+        Currency currency = new Currency();
+        currency.setSymbol("ANY");
+
+        UserCurrency userCurrency = new UserCurrency(user, currency, 50);
+
+        assertEquals("Test", userCurrency.getUser().getLastname());
+        assertEquals("ANY", userCurrency.getCurrency().getSymbol());
+        assertEquals(50, userCurrency.getQuantity());
     }
 
     private String GetRandomStringOfLengthOnlyLetters(Integer length) {

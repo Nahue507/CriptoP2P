@@ -26,4 +26,16 @@ public class UserCurrency {
         this.currency = currency;
         Quantity = quantity;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public float getQuantity() {
+        return Quantity;
+    }
 }

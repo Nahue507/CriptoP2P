@@ -1,13 +1,12 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi;
 
-import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Intention;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Transaction;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.model.TransactionType;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Calendar;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TransactionsTest {
@@ -133,5 +132,40 @@ public class TransactionsTest {
         transaction.setSaleIntention(intention);
 
         assertFalse(transaction.shouldBeCancelled());
+    }
+
+    @Test
+    void testTransactionProperties() {
+        Date date = new Date(2022, Calendar.JULY, 1);
+        User issuer = new User();
+        issuer.setName("Name");
+
+        Intention buyIntention = new Intention();
+        buyIntention.setDate(date);
+
+        Intention saleIntention = new Intention();
+        saleIntention.setIssuer(issuer);
+
+        Currency currency = new Currency();
+        currency.setPrice("1000");
+
+        Transaction transaction = new Transaction();
+        transaction.setId(1);
+        transaction.setType(TransactionType.SALE);
+        transaction.setBuyIntention(buyIntention);
+        transaction.setSaleIntention(saleIntention);
+        transaction.setCurrency(currency);
+        transaction.setQuantity(200);
+        transaction.setDate(date);
+        transaction.setStatus(TransactionStatus.TO_BE_CONFIRMED);
+
+        assertEquals(1, transaction.getId());
+        assertEquals(TransactionType.SALE, transaction.getType());
+        assertEquals(date, transaction.getBuyIntention().getDate());
+        assertEquals("Name", transaction.getSaleIntention().getIssuer().getName());
+        assertEquals("1000", transaction.getCurrency().getPrice());
+        assertEquals(200, transaction.getQuantity());
+        assertEquals(date, transaction.getDate());
+        assertEquals(TransactionStatus.TO_BE_CONFIRMED, transaction.getStatus());
     }
 }
