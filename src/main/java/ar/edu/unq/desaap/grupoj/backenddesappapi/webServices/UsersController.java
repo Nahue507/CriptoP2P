@@ -1,5 +1,6 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.webServices;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.aspect.LogExecutionTime;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.UsersService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.UserDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.UserDetailsDTO;
@@ -27,6 +28,7 @@ public class UsersController {
     @PostMapping(path = "users",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @LogExecutionTime
     public ResponseEntity<UserDetailsDTO> Create(@RequestBody UserDTO userDTO) {
 
         try {
@@ -42,6 +44,7 @@ public class UsersController {
     }
 
     @GetMapping("/users")
+    @LogExecutionTime
     public ResponseEntity<List<UserDetailsDTO>> allUsers() {
         List<UserDetailsDTO> list = usersService.findAll();
         return ResponseEntity.ok().body(list);

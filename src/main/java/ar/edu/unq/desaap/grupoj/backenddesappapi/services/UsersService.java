@@ -11,6 +11,7 @@ import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UsersExcept
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,9 +98,14 @@ public class UsersService {
                 userDTO.lastname,
                 userDTO.email,
                 userDTO.address,
-                userDTO.password,
+                new BCryptPasswordEncoder().encode(userDTO.password),
                 userDTO.cvu,
                 userDTO.wallet
         );
     }
+
+    public User findByEmail(String email) throws UserNotFoundException{
+        return this.userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+    }
+
 }

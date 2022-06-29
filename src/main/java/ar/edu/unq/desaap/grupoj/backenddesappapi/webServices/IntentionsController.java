@@ -1,5 +1,6 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.webServices;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.aspect.LogExecutionTime;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.IntentionStatus;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.TransactionType;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.IntentionDTO;
@@ -26,6 +27,7 @@ public class IntentionsController {
     @PostMapping(path = "intentions",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @LogExecutionTime
     public ResponseEntity<IntentionDetailsDTO> Create(@RequestBody IntentionDTO intention) {
         try {
             IntentionDetailsDTO newIntention = intentionService.save(intention);
@@ -40,12 +42,14 @@ public class IntentionsController {
     }
 
     @GetMapping("/intentions")
+    @LogExecutionTime
     public ResponseEntity<List<IntentionDetailsDTO>> findAll() {
         List<IntentionDetailsDTO> list = intentionService.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/intentions/filter")
+    @LogExecutionTime
     public ResponseEntity<List<IntentionDetailsDTO>> getAllWithTypeAndStatus(
             @RequestParam("type") TransactionType type,
             @RequestParam("status") IntentionStatus status) {

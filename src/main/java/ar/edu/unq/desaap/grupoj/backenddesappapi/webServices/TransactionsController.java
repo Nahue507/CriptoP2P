@@ -1,5 +1,6 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.webServices;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.aspect.LogExecutionTime;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.TransactionService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionBuyDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionDetailsDTO;
@@ -28,6 +29,7 @@ public class TransactionsController {
     @PostMapping(path = "transactions/buy",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @LogExecutionTime
     public ResponseEntity<TransactionDetailsDTO> Buy(@RequestBody TransactionBuyDTO transactionDTO) {
         try {
             TransactionDetailsDTO transaction = transactionService.saveBuyTransaction(transactionDTO);
@@ -42,6 +44,7 @@ public class TransactionsController {
     @PostMapping(path = "transactions/accept",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @LogExecutionTime
     public ResponseEntity<String> accept(@RequestBody TransactionProcessDTO dto) {
         try {
             transactionService.acceptTransaction(dto.userId, dto.transactionId);
@@ -56,6 +59,7 @@ public class TransactionsController {
     @PostMapping(path = "transactions/cancel",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @LogExecutionTime
     public ResponseEntity<String> cancel(@RequestBody TransactionProcessDTO dto) {
         try {
             transactionService.cancelTransaction(dto.userId, dto.transactionId);
@@ -68,6 +72,7 @@ public class TransactionsController {
     }
 
     @GetMapping("/transactions")
+    @LogExecutionTime
     public ResponseEntity<List<TransactionDetailsDTO>> findAll() {
         List<TransactionDetailsDTO> list = transactionService.findAll();
         return ResponseEntity.ok().body(list);
