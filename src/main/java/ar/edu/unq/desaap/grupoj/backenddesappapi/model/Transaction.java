@@ -1,7 +1,10 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.model;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.TransactionProcessException;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 public class Transaction {
@@ -153,5 +156,26 @@ public class Transaction {
     public boolean priceDecreased() {
         float percentage = (this.price - this.saleIntention.getPrice()) / 100;
         return percentage < -0.05;
+    }
+
+    public Integer calculatePoints() {
+        long duration = new Date().getTime() - this.getDate().getTime();
+        long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+
+        return diffInMinutes < 30 ? 10 : 5;
+    }
+
+    public void checkUserCanProcess(Integer userId) throws TransactionProcessException {
+        if (saleAndUserNotBuyer(userId) || buyAndUserNotSeller(userId)) {
+            throw new TransactionProcessException("This user cannot accept the transaction");
+        }
+    }
+
+    private boolean saleAndUserNotBuyer(Integer userId) {
+        return type == TransactionType.SALE && !buyer.getId().equals(userId);
+    }
+
+    private boolean buyAndUserNotSeller(Integer userId) {
+        return type == TransactionType.BUY && !seller.getId().equals(userId);
     }
 }

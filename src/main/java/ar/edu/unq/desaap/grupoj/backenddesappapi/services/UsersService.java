@@ -1,5 +1,7 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.services;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Transaction;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.TransactionType;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.repositories.UserRepository;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.UserDTO;
@@ -49,6 +51,46 @@ public class UsersService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public User find(Integer userId) throws UserNotFoundException {
+        return this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
+    }
+
+    @Transactional
+    public void saveTransaction(Transaction transaction) throws UserNotFoundException {
+        if (transaction.getType() == TransactionType.SALE) {
+            User seller = this.find(transaction.getSeller().getId());
+            addTransactionToUserWithPoints(transaction, seller);
+
+            User buyer = this.find(transaction.getBuyer().getId());
+            addTransactionToUser(seller, buyer);
+        } else {
+            User buyer = this.find(transaction.getBuyer().getId());
+            addTransactionToUserWithPoints(transaction, buyer);
+
+            User seller = this.find(transaction.getSeller().getId());
+            addTransactionToUser(seller, seller);
+        }
+    }
+
+    @Transactional
+    public void decreaseReputation(Integer userId, Integer points) throws UserNotFoundException {
+        User user = this.find(userId);
+        user.addReputation(points * -1);
+        userRepository.save(user);
+    }
+
+    private void addTransactionToUser(User seller, User buyer) {
+        seller.addTransaction();
+        userRepository.save(buyer);
+    }
+
+    private void addTransactionToUserWithPoints(Transaction transaction, User user) {
+        user.addTransaction();
+        user.addReputation(transaction.calculatePoints());
+        userRepository.save(user);
+    }
+
     private User mapUser(UserDTO userDTO) {
         return new User(
                 userDTO.name,
@@ -59,10 +101,5 @@ public class UsersService {
                 userDTO.cvu,
                 userDTO.wallet
         );
-    }
-
-    @Transactional
-    public User find(Integer userId) throws UserNotFoundException {
-        return this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
     }
 }

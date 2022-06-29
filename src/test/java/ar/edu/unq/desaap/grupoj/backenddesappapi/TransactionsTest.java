@@ -1,6 +1,7 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi;
 
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.*;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.TransactionProcessException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
@@ -132,6 +133,47 @@ public class TransactionsTest {
         transaction.setSaleIntention(intention);
 
         assertFalse(transaction.shouldBeCancelled());
+    }
+
+    @Test
+    void acceptedInLessThan30MinutesShouldGive10Points() {
+        Calendar currentTimeNow = Calendar.getInstance();
+        currentTimeNow.add(Calendar.MINUTE, -10);
+        Date date10MinutesBefore = currentTimeNow.getTime();
+
+        Transaction transaction = new Transaction();
+        transaction.setDate(date10MinutesBefore);
+
+        assertEquals(10, transaction.calculatePoints());
+    }
+
+    @Test
+    void acceptedInMoreThan30MinutesShouldGive5Points() {
+        Calendar currentTimeNow = Calendar.getInstance();
+        currentTimeNow.add(Calendar.MINUTE, -50);
+        Date date50MinutesBefore = currentTimeNow.getTime();
+
+        Transaction transaction = new Transaction();
+        transaction.setDate(date50MinutesBefore);
+
+        assertEquals(5, transaction.calculatePoints());
+    }
+
+    @Test
+    void checkUserCanProcessShouldThrowException() {
+        User seller = new User();
+        seller.setId(1);
+
+        User buyer = new User();
+        buyer.setId(2);
+
+        Transaction transaction = new Transaction();
+        transaction.setType(TransactionType.SALE);
+        transaction.setSeller(seller);
+        transaction.setBuyer(buyer);
+
+        Exception exception = assertThrows(TransactionProcessException.class, () -> transaction.checkUserCanProcess(1));
+        assertTrue(exception.getMessage().contains("This user cannot accept the transaction"));
     }
 
     @Test
