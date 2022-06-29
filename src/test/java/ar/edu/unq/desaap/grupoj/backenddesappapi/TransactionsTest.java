@@ -177,6 +177,24 @@ public class TransactionsTest {
     }
 
     @Test
+    void testProcessCompletedTransactionShouldThrowException() {
+        Transaction transaction = new Transaction();
+        transaction.setStatus(TransactionStatus.COMPLETED);
+
+        Exception exception = assertThrows(TransactionProcessException.class, transaction::checkCanBeProcessed);
+        assertTrue(exception.getMessage().contains("Transaction already processed"));
+    }
+
+    @Test
+    void testProcessCancelledTransactionShouldThrowException() {
+        Transaction transaction = new Transaction();
+        transaction.setStatus(TransactionStatus.CANCELLED);
+
+        Exception exception = assertThrows(TransactionProcessException.class, transaction::checkCanBeProcessed);
+        assertTrue(exception.getMessage().contains("Transaction already processed"));
+    }
+
+    @Test
     void testTransactionProperties() {
         Date date = new Date(2022, Calendar.JULY, 1);
         User issuer = new User();

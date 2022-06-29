@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -77,8 +78,11 @@ public class TransactionService {
         }
     }
 
-    public List<Transaction> findAll() {
-        return (List<Transaction>) this.transactionRepository.findAll();
+    public List<TransactionDetailsDTO> findAll() {
+        List<Transaction> list = (List<Transaction>) this.transactionRepository.findAll();
+
+        return list.stream().map(TransactionDetailsDTO::new)
+                .collect(Collectors.toList());
     }
 
     public Transaction find(Integer id) throws TransactionNotFoundException {
@@ -90,6 +94,7 @@ public class TransactionService {
         Transaction transaction = find(transactionId);
 
         transaction.checkUserCanProcess(userId);
+        transaction.checkCanBeProcessed();
 
         transaction.setStatus(TransactionStatus.COMPLETED);
         transaction.getSaleIntention().setStatus(IntentionStatus.COMPLETED);

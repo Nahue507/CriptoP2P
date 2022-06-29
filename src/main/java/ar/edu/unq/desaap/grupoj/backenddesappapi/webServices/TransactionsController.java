@@ -1,19 +1,22 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.webServices;
 
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.TransactionService;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionProcessDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionBuyDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionDetailsDTO;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.TransactionProcessDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @EnableAutoConfiguration
@@ -62,5 +65,11 @@ public class TransactionsController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Transaction could not be cancelled");
         }
+    }
+
+    @GetMapping("/transactions")
+    public ResponseEntity<List<TransactionDetailsDTO>> findAll() {
+        List<TransactionDetailsDTO> list = transactionService.findAll();
+        return ResponseEntity.ok().body(list);
     }
 }

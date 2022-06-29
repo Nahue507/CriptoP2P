@@ -178,4 +178,10 @@ public class Transaction {
     private boolean buyAndUserNotSeller(Integer userId) {
         return type == TransactionType.BUY && !seller.getId().equals(userId);
     }
+
+    public void checkCanBeProcessed() throws TransactionProcessException {
+        if (this.status != TransactionStatus.TO_BE_CONFIRMED) {
+            throw new TransactionProcessException("Transaction already processed");
+        }
+    }
 }
