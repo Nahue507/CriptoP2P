@@ -16,5 +16,10 @@ public class ArchitectureTest {
                 .that().resideInAPackage("..services..")
                 .should().onlyBeAccessed().byAnyPackage("..webServices..", "..services..", "..util..");
 
+        @ArchTest
+        public static final ArchRule repositoriesOnlyAccessByServices = classes()
+                .that().resideInAPackage("..repositories..")
+                .should().onlyBeAccessed().byAnyPackage("..services..");
+
     }
 }
