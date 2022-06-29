@@ -50,6 +50,7 @@ dependencies {
 	implementation 'redis.clients:jedis:2.8.0'
 	compileOnly 'org.sonarsource.sonarqube:sonar-plugin-api:7.9'
 	testImplementation 'org.sonarsource.sonarqube:sonar-plugin-api:7.9'
+	testImplementation 'com.tngtech.archunit:archunit-junit5:0.23.1'
 
 	tasks.named('test') {
 
