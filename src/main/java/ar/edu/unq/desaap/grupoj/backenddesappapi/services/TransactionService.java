@@ -92,6 +92,16 @@ public class TransactionService {
         return this.transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException(id.toString()));
     }
 
+    public List<TransactionDetailsDTO> getCompletedTransactionsByUserBetweenDates(Integer userId, Date dateFrom, Date dateTo) {
+        User user = new User();
+        user.setId(userId);
+
+        List<Transaction> list = this.transactionRepository.getCompletedTransactionsByUserBetweenDates(user, dateFrom, dateTo);
+
+        return list.stream().map(TransactionDetailsDTO::new)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void acceptTransaction(Integer userId, Integer transactionId) throws TransactionNotFoundException, UserNotFoundException, TransactionProcessException {
         Transaction transaction = find(transactionId);
