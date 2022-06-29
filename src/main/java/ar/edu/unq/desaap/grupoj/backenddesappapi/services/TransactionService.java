@@ -37,9 +37,9 @@ public class TransactionService {
             throws TransactionException, CurrencyNotFoundException,
             UserNotFoundException, IntentionNotFoundException,
             SameUserException, PriceIncreasedException {
-        Currency currency = currencyService.find(transactionDTO.currencySymbol);
         User buyer = usersService.find(transactionDTO.buyerId);
         Intention saleIntention = intentionService.find(transactionDTO.saleIntentionId);
+        Currency currency = currencyService.find(saleIntention.getCurrency().getSymbol());
         Intention buyIntention = mapIntention(currency, buyer, saleIntention);
 
         try {
