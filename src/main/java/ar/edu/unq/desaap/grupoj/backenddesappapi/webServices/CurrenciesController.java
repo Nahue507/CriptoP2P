@@ -1,9 +1,10 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.webServices;
 
-import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.CacheService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.CurrencyService;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.CurrencyDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.QuotationHistoryDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +24,8 @@ public class CurrenciesController {
     private CurrencyService currencyService;
 
     @GetMapping("/allPrices")
-    public ResponseEntity<List<Currency>> getAllCurrencies(){
-        List<Currency> result = new ArrayList<>();
+    public ResponseEntity<List<CurrencyDTO>> getAllCurrencies() throws JsonProcessingException {
+        List<CurrencyDTO> result = new ArrayList<>();
         for(String crypto : currencyService.getAllCurrencySymbols()){
             result.add(cacheService.getCurrency(crypto));
         }

@@ -12,8 +12,9 @@ public class IntentionDetailsDTO {
     public String issuer;
     public String issuerReputation;
     public String currencySymbol;
-    public Float price;
+    public Float priceUSD;
     public Float quantity;
+    public Float totalUSD;
     public Date date;
     public IntentionStatus status;
 
@@ -23,8 +24,9 @@ public class IntentionDetailsDTO {
         this.issuer = intention.getIssuer().getEmail();
         this.issuerReputation = intention.getIssuer().getReputation();
         this.currencySymbol = intention.getCurrency().getSymbol();
-        this.price = intention.getPrice();
+        this.priceUSD = intention.getPrice();
         this.quantity = intention.getQuantity();
+        this.totalUSD = priceUSD * quantity;
         this.date = intention.getDate();
         this.status = intention.getStatus();
     }

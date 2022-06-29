@@ -35,27 +35,24 @@ public class CurrencyService {
     @Autowired
     private QuotationRepository quotationRepository;
 
-    @Autowired
-    private CacheService cacheService;
-
-
     /**
      * Returns a currency with its price from Crypto API
+     *
      * @param symbol currency symbol
      */
-    private Currency getCurrencyPriceFromAPI(String symbol){
+    private Currency getCurrencyPriceFromAPI(String symbol) {
         String uri = cryptosApiProperties.getUri().concat(symbol);
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(uri,Currency.class);
+        return restTemplate.getForObject(uri, Currency.class);
     }
 
     /**
      * @return List of all System Crypto Currencies with their current price from Crypto API
      */
-    public List<Currency> getAllWithPrices(){
+    public List<Currency> getAllWithPrices() {
         List<Currency> result = new ArrayList<>();
 
-        for(String crypto : this.getAllCurrencySymbols()){
+        for (String crypto : this.getAllCurrencySymbols()) {
             result.add(this.getCurrencyPriceFromAPI(crypto));
         }
 
@@ -64,30 +61,30 @@ public class CurrencyService {
 
     @Transactional
     public void save(Currency newCurrency) {
-            Currency currencyCreated = currencyRepository.save(newCurrency);
-            logger.info(MessageFormat.format("Currency with symbol: {0} was created or was updated", currencyCreated.getSymbol()));
+        Currency currencyCreated = currencyRepository.save(newCurrency);
+        logger.info(MessageFormat.format("Currency with symbol: {0} was created or was updated", currencyCreated.getSymbol()));
     }
 
-
     public Currency find(String currencyName) throws CurrencyNotFoundException {
-        Currency currency =this.currencyRepository.findById(currencyName).orElseThrow(() -> new CurrencyNotFoundException(currencyName));
-        currency.setPrice(cacheService.getCurrentPrice(currencyName));
+        Currency currency = this.currencyRepository.findById(currencyName).orElseThrow(() -> new CurrencyNotFoundException(currencyName));
+        Currency currencyAPI = this.getCurrencyPriceFromAPI(currencyName);
+        currency.setPrice(currencyAPI.getPrice());
         return currency;
     }
 
     public List<QuotationHistoryDTO> getLastQuotations(String symbol) {
-        Date date = DateUtils.addHours(new Date(),-24);
+        Date date = DateUtils.addHours(new Date(), -24);
 
         List<QuotationHistory> list = quotationRepository.getLastQuotations(symbol, date);
 
         return list.stream().map(x -> new QuotationHistoryDTO(
-                    x.getCurrency().getSymbol(),
-                    x.getQuotation(),
-                    x.getDate()))
+                        x.getCurrency().getSymbol(),
+                        x.getQuotation(),
+                        x.getDate()))
                 .collect(Collectors.toList());
     }
 
-    public List<String> getAllCurrencySymbols(){
+    public List<String> getAllCurrencySymbols() {
         return Arrays.asList(
                 "ALICEUSDT",
                 "MATICUSDT",
