@@ -1,5 +1,6 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.webServices;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.aspect.LogExecutionTime;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.CacheService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.CurrencyService;
@@ -23,6 +24,7 @@ public class CurrenciesController {
     private CurrencyService currencyService;
 
     @GetMapping("/allPrices")
+    @LogExecutionTime
     public ResponseEntity<List<Currency>> getAllCurrencies(){
         List<Currency> result = new ArrayList<>();
         for(String crypto : currencyService.getAllCurrencySymbols()){
@@ -32,6 +34,7 @@ public class CurrenciesController {
     }
 
     @GetMapping("/lastQuotation/{symbol}")
+    @LogExecutionTime
     public ResponseEntity<List<QuotationHistoryDTO>> getLastQuotations(
             @PathVariable("symbol") String symbol){
         List<QuotationHistoryDTO> list = currencyService.getLastQuotations(symbol);
