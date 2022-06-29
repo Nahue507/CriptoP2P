@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -44,7 +45,7 @@ public class TransactionService {
         try {
             Transaction transaction = mapBuyTransaction(currency, buyer, saleIntention, buyIntention);
 
-            if(transaction.shouldBeCancelled()){
+            if (transaction.shouldBeCancelled()) {
                 transaction.setStatus(TransactionStatus.CANCELLED);
                 buyIntention.setStatus(IntentionStatus.CANCELLED);
                 saleIntention.setStatus(IntentionStatus.CANCELLED);
@@ -60,21 +61,65 @@ public class TransactionService {
                     transactionCreated.getId(),
                     transactionCreated.getType()));
 
-            if(transaction.sameUser()){
+            if (transaction.sameUser()) {
                 throw new SameUserException("Same seller and buyer is not allowed");
             }
 
-            if(transaction.priceIncreased()){
+            if (transaction.priceIncreased()) {
                 throw new PriceIncreasedException("The price increased and the Transaction is Cancelled");
             }
+
             return new TransactionDetailsDTO(transactionCreated);
-        }
-        catch (SameUserException | PriceIncreasedException e) {
+        } catch (SameUserException | PriceIncreasedException e) {
             throw e;
         } catch (Exception e) {
             logger.error(e);
             throw new TransactionException("Transaction could not be created");
         }
+    }
+
+    public List<TransactionDetailsDTO> findAll() {
+        List<Transaction> list = (List<Transaction>) this.transactionRepository.findAll();
+
+        return list.stream().map(TransactionDetailsDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public Transaction find(Integer id) throws TransactionNotFoundException {
+        return this.transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException(id.toString()));
+    }
+
+    @Transactional
+    public void acceptTransaction(Integer userId, Integer transactionId) throws TransactionNotFoundException, UserNotFoundException, TransactionProcessException {
+        Transaction transaction = find(transactionId);
+
+        transaction.checkUserCanProcess(userId);
+        transaction.checkCanBeProcessed();
+
+        transaction.setStatus(TransactionStatus.COMPLETED);
+        transaction.getSaleIntention().setStatus(IntentionStatus.COMPLETED);
+        transaction.getBuyIntention().setStatus(IntentionStatus.COMPLETED);
+
+        this.transactionRepository.save(transaction);
+        logger.info(MessageFormat.format("Transaction with id: {0} was accepted", transaction.getId()));
+
+        this.usersService.saveTransaction(transaction);
+    }
+
+    @Transactional
+    public void cancelTransaction(Integer userId, Integer transactionId) throws TransactionNotFoundException, UserNotFoundException, TransactionProcessException {
+        Transaction transaction = find(transactionId);
+
+        transaction.checkUserCanProcess(userId);
+
+        transaction.setStatus(TransactionStatus.CANCELLED);
+        transaction.getSaleIntention().setStatus(IntentionStatus.CANCELLED);
+        transaction.getBuyIntention().setStatus(IntentionStatus.CANCELLED);
+
+        this.transactionRepository.save(transaction);
+        logger.info(MessageFormat.format("Transaction with id: {0} was cancelled", transaction.getId()));
+
+        this.usersService.decreaseReputation(userId, 20);
     }
 
     private Transaction mapBuyTransaction(Currency currency, User buyer, Intention saleIntention, Intention buyIntention) {
@@ -101,38 +146,5 @@ public class TransactionService {
         buyIntention.setDate(new Date());
         buyIntention.setStatus(IntentionStatus.ACTIVE);
         return buyIntention;
-    }
-
-    public List<Transaction> findAll() {
-        return (List<Transaction>) this.transactionRepository.findAll();
-    }
-
-    public Transaction find(Integer id) throws TransactionNotFoundException {
-        return this.transactionRepository.findById(id).orElseThrow(() -> new TransactionNotFoundException(id.toString()));
-    }
-
-    @Transactional
-    public void acceptTransaction(Integer userId, Integer transactionId) throws TransactionNotFoundException, UserNotFoundException {
-        User user = this.usersService.find(userId);
-        Transaction transaction = find(transactionId);
-
-        transaction.setStatus(TransactionStatus.COMPLETED);
-        transaction.getSaleIntention().setStatus(IntentionStatus.COMPLETED);
-        transaction.getBuyIntention().setStatus(IntentionStatus.COMPLETED);
-
-        this.transactionRepository.save(transaction);
-        logger.info(MessageFormat.format("Transaction with id: {0} was accepted", transaction.getId()));
-    }
-
-    @Transactional
-    public void cancelTransaction(Integer userId, Integer transactionId) throws TransactionNotFoundException, UserNotFoundException {
-        User user = this.usersService.find(userId);
-        Transaction transaction = find(transactionId);
-
-        transaction.setStatus(TransactionStatus.CANCELLED);
-        transaction.getSaleIntention().setStatus(IntentionStatus.CANCELLED);
-        transaction.getBuyIntention().setStatus(IntentionStatus.CANCELLED);
-
-        this.transactionRepository.save(transaction);
     }
 }

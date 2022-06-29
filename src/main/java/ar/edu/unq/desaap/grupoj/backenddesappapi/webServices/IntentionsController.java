@@ -40,6 +40,12 @@ public class IntentionsController {
     }
 
     @GetMapping("/intentions")
+    public ResponseEntity<List<IntentionDetailsDTO>> findAll() {
+        List<IntentionDetailsDTO> list = intentionService.findAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping("/intentions/filter")
     public ResponseEntity<List<IntentionDetailsDTO>> getAllWithTypeAndStatus(
             @RequestParam("type") TransactionType type,
             @RequestParam("status") IntentionStatus status) {

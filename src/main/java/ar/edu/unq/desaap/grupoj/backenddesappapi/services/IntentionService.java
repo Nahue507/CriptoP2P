@@ -57,7 +57,6 @@ public class IntentionService {
         }
     }
 
-    @Transactional
     public List<IntentionDetailsDTO> findAllWithStatus(TransactionType type, IntentionStatus status) {
         List<Intention> list = this.intentionRepository.findAllWithTypeAndStatus(type, status);
 
@@ -67,5 +66,12 @@ public class IntentionService {
 
     public Intention find(Integer id) throws IntentionNotFoundException {
         return this.intentionRepository.findById(id).orElseThrow(() -> new IntentionNotFoundException(id.toString()));
+    }
+
+    public List<IntentionDetailsDTO> findAll() {
+        List<Intention> list = (List<Intention>) this.intentionRepository.findAll();
+
+        return list.stream().map(IntentionDetailsDTO::new)
+                .collect(Collectors.toList());
     }
 }

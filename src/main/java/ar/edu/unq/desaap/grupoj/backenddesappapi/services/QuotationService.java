@@ -2,7 +2,7 @@ package ar.edu.unq.desaap.grupoj.backenddesappapi.services;
 
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.QuotationHistory;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.model.USD;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.DollarQuotationDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.repositories.QuotationRepository;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.quotations.DollarApiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class QuotationService {
     public String getDollarQuotation(){
         String uri = dollarApiProperties.getUri();
         RestTemplate restTemplate = new RestTemplate();
-        USD usd = restTemplate.getForObject(uri, USD.class);
+        DollarQuotationDTO usd = restTemplate.getForObject(uri, DollarQuotationDTO.class);
         return usd != null ? usd.getPrice() : null;
     }
 

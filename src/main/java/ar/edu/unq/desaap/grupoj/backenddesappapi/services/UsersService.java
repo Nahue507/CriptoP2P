@@ -1,5 +1,7 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.services;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Transaction;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.TransactionType;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.repositories.UserRepository;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.UserDTO;
@@ -31,7 +33,7 @@ public class UsersService {
             user.testIsValid();
             User userCreated = userRepository.save(user);
             logger.info(MessageFormat.format("User with id: {0} was created", user.getId()));
-            return mapUserDetailsDTO(userCreated);
+            return new UserDetailsDTO(userCreated);
         } catch (UsersException e) {
             logger.error(e);
             throw e;
@@ -45,8 +47,48 @@ public class UsersService {
     public List<UserDetailsDTO> findAll() {
         List<User> list = (List<User>) this.userRepository.findAll();
 
-        return list.stream().map(x -> mapUserDetailsDTO(x))
+        return list.stream().map(UserDetailsDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public User find(Integer userId) throws UserNotFoundException {
+        return this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
+    }
+
+    @Transactional
+    public void saveTransaction(Transaction transaction) throws UserNotFoundException {
+        if (transaction.getType() == TransactionType.SALE) {
+            User seller = this.find(transaction.getSeller().getId());
+            addTransactionToUserWithPoints(transaction, seller);
+
+            User buyer = this.find(transaction.getBuyer().getId());
+            addTransactionToUser(seller, buyer);
+        } else {
+            User buyer = this.find(transaction.getBuyer().getId());
+            addTransactionToUserWithPoints(transaction, buyer);
+
+            User seller = this.find(transaction.getSeller().getId());
+            addTransactionToUser(seller, seller);
+        }
+    }
+
+    @Transactional
+    public void decreaseReputation(Integer userId, Integer points) throws UserNotFoundException {
+        User user = this.find(userId);
+        user.addReputation(points * -1);
+        userRepository.save(user);
+    }
+
+    private void addTransactionToUser(User seller, User buyer) {
+        seller.addTransaction();
+        userRepository.save(buyer);
+    }
+
+    private void addTransactionToUserWithPoints(Transaction transaction, User user) {
+        user.addTransaction();
+        user.addReputation(transaction.calculatePoints());
+        userRepository.save(user);
     }
 
     private User mapUser(UserDTO userDTO) {
@@ -59,22 +101,5 @@ public class UsersService {
                 userDTO.cvu,
                 userDTO.wallet
         );
-    }
-
-    private UserDetailsDTO mapUserDetailsDTO(User x) {
-        return new UserDetailsDTO(
-                x.getId(),
-                x.getName(),
-                x.getLastname(),
-                x.getEmail(),
-                x.getAddress(),
-                x.getCvu(),
-                x.getWallet(),
-                x.getReputation());
-    }
-
-    @Transactional
-    public User find(Integer userId) throws UserNotFoundException {
-        return this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
     }
 }

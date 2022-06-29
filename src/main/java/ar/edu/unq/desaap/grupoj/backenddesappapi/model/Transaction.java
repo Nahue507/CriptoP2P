@@ -1,7 +1,10 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.model;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.TransactionProcessException;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 public class Transaction {
@@ -11,6 +14,7 @@ public class Transaction {
     private Integer id;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private TransactionType type;
 
     @ManyToOne
@@ -43,6 +47,7 @@ public class Transaction {
     private Date date;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
     public Integer getId() {
@@ -133,7 +138,7 @@ public class Transaction {
         this.status = status;
     }
 
-    public boolean shouldBeCancelled(){
+    public boolean shouldBeCancelled() {
         return sameUser() ||
                 this.type == TransactionType.BUY && priceIncreased() ||
                 this.type == TransactionType.SALE && priceDecreased();
@@ -143,13 +148,40 @@ public class Transaction {
         return this.getBuyer().getId().equals(this.getSeller().getId());
     }
 
-    public boolean priceIncreased(){
-        int result = Float.compare(this.price,this.saleIntention.getPrice());
-        return result > 0;
+    public boolean priceIncreased() {
+        float percentage = (this.price - this.saleIntention.getPrice()) / 100;
+        return percentage > 0.05;
     }
 
-    public boolean priceDecreased(){
-        int result = Float.compare(this.price,this.buyIntention.getPrice());
-        return result < 0;
+    public boolean priceDecreased() {
+        float percentage = (this.price - this.saleIntention.getPrice()) / 100;
+        return percentage < -0.05;
+    }
+
+    public Integer calculatePoints() {
+        long duration = new Date().getTime() - this.getDate().getTime();
+        long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+
+        return diffInMinutes < 30 ? 10 : 5;
+    }
+
+    public void checkUserCanProcess(Integer userId) throws TransactionProcessException {
+        if (saleAndUserNotBuyer(userId) || buyAndUserNotSeller(userId)) {
+            throw new TransactionProcessException("This user cannot accept the transaction");
+        }
+    }
+
+    private boolean saleAndUserNotBuyer(Integer userId) {
+        return type == TransactionType.SALE && !buyer.getId().equals(userId);
+    }
+
+    private boolean buyAndUserNotSeller(Integer userId) {
+        return type == TransactionType.BUY && !seller.getId().equals(userId);
+    }
+
+    public void checkCanBeProcessed() throws TransactionProcessException {
+        if (this.status != TransactionStatus.TO_BE_CONFIRMED) {
+            throw new TransactionProcessException("Transaction already processed");
+        }
     }
 }

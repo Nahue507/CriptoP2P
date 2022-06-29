@@ -1,13 +1,14 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
-import org.apache.commons.lang3.RandomStringUtils;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.UserCurrency;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UsersException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
@@ -92,51 +93,128 @@ public class UserTest {
     }
 
     @Test
-    void testUserWithCorrectEmail() {
-        User user = new User();
-        user.setEmail("pepito@hotmail.com");
+    void testUserInvalidNameShouldThrowException() {
+        User user = getValidUser();
+        user.setName(GetRandomStringOfLengthOnlyLetters(2));
 
-        assertTrue(user.isValidEmail());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+        assertTrue(exception.getMessage().contains("Invalid Name length"));
     }
 
     @Test
-    void testUserCorrectLengthName() {
-        User user = new User();
-        user.setName(GetRandomStringOfLengthOnlyLetters(10));
-        System.out.println(user.getName().length());
-        assertTrue(user.isValidName());
+    void testUserInvalidLastNameShouldThrowException() {
+        User user = getValidUser();
+        user.setLastname(GetRandomStringOfLengthOnlyLetters(2));
+
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+        assertTrue(exception.getMessage().contains("Invalid lastname length"));
     }
 
     @Test
-    void testUserCorrectLastName() {
-        User user = new User();
-        user.setLastname(GetRandomStringOfLengthOnlyLetters(10));
+    void testUserWithInvalidEmailThrowException() {
+        User user = getValidUser();
+        user.setEmail("pepito.hotmail.com");
 
-        assertTrue(user.isValidLastName());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+        assertTrue(exception.getMessage().contains("Invalid Email"));
     }
 
     @Test
-    void testUserCorrectLengthAddress() {
-        User user = new User();
-        user.setAddress(GetRandomStringOfLengthOnlyLetters(10) + " " + GetRandomStringNumericOfLength(4));
+    void testUserInvalidPasswordShouldThrowException() {
+        User user = getValidUserWithPassword("123");
 
-        assertTrue(user.isValidAddress());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+        assertTrue(exception.getMessage().contains("Invalid Password"));
     }
 
     @Test
-    void testUserValidCVU() {
-        User user = new User();
-        user.setCvu(GetRandomStringNumericOfLength(22));
+    void testUserInvalidAddressShouldThrowException() {
+        User user = getValidUser();
+        user.setAddress(GetRandomStringOfLengthOnlyLetters(9));
 
-        assertTrue(user.isValidCVU());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+        assertTrue(exception.getMessage().contains("Invalid Address length"));
     }
 
     @Test
-    void testUserValidWalletLength() {
-        User user = new User();
-        user.setWallet(GetRandomStringOfLengthOnlyLetters(8));
+    void testUserInvalidCVUShouldThrowException() {
+        User user = getValidUser();
+        user.setCvu(GetRandomStringOfLengthOnlyLetters(21));
 
-        assertTrue(user.isValidWallet());
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+        assertTrue(exception.getMessage().contains("Invalid CVU length"));
+    }
+
+    @Test
+    void testUserInvalidWalletShouldThrowException() {
+        User user = getValidUser();
+        user.setWallet(GetRandomStringOfLengthOnlyLetters(7));
+
+        Exception exception = assertThrows(UsersException.class, user::testIsValid);
+        assertTrue(exception.getMessage().contains("Invalid Wallet length"));
+    }
+
+    @Test
+    void testTransactionStartInZero() {
+        User user = new User();
+        assertEquals(0, user.getTransactions());
+    }
+
+    @Test
+    void testUserWithNoTransactionShouldReturnNoReputation() {
+        User user = new User();
+        assertEquals("No Reputation", user.getReputation());
+    }
+
+    @Test
+    void testUserReputationShouldIncrease() {
+        User user = new User();
+        user.addTransaction();
+        user.addReputation(5);
+        user.addTransaction();
+        user.addReputation(10);
+        assertEquals("15", user.getReputation());
+    }
+
+    @Test
+    void testUserReputationShouldDecrease() {
+        User user = new User();
+        user.addTransaction();
+        user.addReputation(50);
+        user.addTransaction();
+        user.addReputation(-10);
+        assertEquals("40", user.getReputation());
+    }
+
+    @Test
+    void testUserReputationCannotBeNegative() {
+        User user = new User();
+        user.addTransaction();
+        user.addReputation(-30);
+        assertEquals("0", user.getReputation());
+    }
+
+    @Test
+    void testAddTransactionCalledTwiceShouldBeTwo() {
+        User user = new User();
+        user.addTransaction();
+        user.addTransaction();
+        assertEquals(2, user.getTransactions());
+    }
+
+    @Test
+    void testUserCurrencies() {
+        User user = getValidUser();
+        user.setLastname("Test");
+
+        Currency currency = new Currency();
+        currency.setSymbol("ANY");
+
+        UserCurrency userCurrency = new UserCurrency(user, currency, 50);
+
+        assertEquals("Test", userCurrency.getUser().getLastname());
+        assertEquals("ANY", userCurrency.getCurrency().getSymbol());
+        assertEquals(50, userCurrency.getQuantity());
     }
 
     private String GetRandomStringOfLengthOnlyLetters(Integer length) {
@@ -151,7 +229,19 @@ public class UserTest {
                 .toString();
     }
 
-    private String GetRandomStringNumericOfLength(Integer length) {
-        return RandomStringUtils.randomNumeric(length);
+    private User getValidUser() {
+        return getValidUserWithPassword("Abc123$");
+    }
+
+    private User getValidUserWithPassword(String password) {
+        return new User(
+                GetRandomStringOfLengthOnlyLetters(10),
+                GetRandomStringOfLengthOnlyLetters(10),
+                "pepito@hotmail.com",
+                GetRandomStringOfLengthOnlyLetters(15),
+                password,
+                GetRandomStringOfLengthOnlyLetters(22),
+                GetRandomStringOfLengthOnlyLetters(8)
+        );
     }
 }

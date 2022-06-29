@@ -1,5 +1,7 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos;
 
+import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
+
 public class UserDetailsDTO {
     public Integer id;
     public String name;
@@ -8,16 +10,18 @@ public class UserDetailsDTO {
     public String address;
     public String cvu;
     public String wallet;
-    public Long reputation;
+    public Integer transactions;
+    public String reputation;
 
-    public UserDetailsDTO(Integer id, String name, String lastname, String email, String address, String cvu, String wallet, Long reputation) {
-        this.id = id;
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.address = address;
-        this.cvu = cvu;
-        this.wallet = wallet;
-        this.reputation = reputation;
+    public UserDetailsDTO(User user){
+        this.id = user.getId();
+        this.name = user.getName();
+        this.lastname = user.getLastname();
+        this.email = user.getEmail();
+        this.address = user.getAddress();
+        this.cvu = user.getCvu();
+        this.wallet = user.getWallet();
+        this.transactions = user.getTransactions();
+        this.reputation = user.getReputation();
     }
 }

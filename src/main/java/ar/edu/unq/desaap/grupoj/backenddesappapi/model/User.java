@@ -40,13 +40,21 @@ public class User {
     private String wallet;
 
     @Column
-    private Long reputation;
+    private Integer transactions = 0;
+
+    @Column
+    private Integer reputation = 0;
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final Set<UserCurrency> currencies;
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -97,12 +105,16 @@ public class User {
         this.wallet = wallet;
     }
 
-    public Long getReputation() {
-        return reputation;
+    public Integer getTransactions() {
+        return transactions;
     }
 
-    public void setReputation(Long reputation) {
-        this.reputation = reputation;
+    public String getReputation() {
+        return this.transactions != 0 ? this.reputation.toString() : "No Reputation";
+    }
+
+    public void addReputation(Integer points) {
+        this.reputation = Math.max(reputation + points, 0);
     }
 
     public User() {
@@ -121,73 +133,77 @@ public class User {
     }
 
     public void testIsValid() throws UsersException {
-        if(!this.isValidName()){
+        if (!this.isValidName()) {
             throw new UsersException("Invalid Name length");
         }
-        if(!this.isValidLastName()){
+        if (!this.isValidLastName()) {
             throw new UsersException("Invalid lastname length");
         }
-        if(!this.isValidEmail()){
+        if (!this.isValidEmail()) {
             throw new UsersException("Invalid Email");
         }
-        if(!this.isValidPassword()){
+        if (!this.isValidPassword()) {
             throw new UsersException("Invalid Password");
         }
-        if(!this.isValidAddress()){
+        if (!this.isValidAddress()) {
             throw new UsersException("Invalid Address length");
         }
-        if(!this.isValidWallet()){
+        if (!this.isValidWallet()) {
             throw new UsersException("Invalid Wallet length");
         }
-        if(!this.isValidCVU()){
+        if (!this.isValidCVU()) {
             throw new UsersException("Invalid CVU length");
         }
     }
 
     @JsonIgnore
-    public boolean isValidName(){
+    public boolean isValidName() {
         return isValidLength(this.name, 3, 30);
     }
 
     @JsonIgnore
-    public boolean isValidLastName(){
+    public boolean isValidLastName() {
         return isValidLength(this.lastname, 3, 30);
     }
 
     @JsonIgnore
-    public boolean isValidAddress(){
+    public boolean isValidAddress() {
         return isValidLength(this.address, 10, 20);
     }
 
     @JsonIgnore
-    public boolean isValidCVU(){
+    public boolean isValidCVU() {
         return this.cvu.length() == 22;
     }
 
     @JsonIgnore
-    public boolean isValidWallet(){
+    public boolean isValidWallet() {
         return this.wallet.length() == 8;
     }
 
     @JsonIgnore
-    public boolean isValidEmail(){
+    public boolean isValidEmail() {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(this.email);
         return matcher.find();
     }
 
     @JsonIgnore
-    public boolean isValidPassword(){
+    public boolean isValidPassword() {
         Matcher matcher = VALID_PASSWORD_REGEX.matcher(this.password);
         return matcher.find();
     }
 
+    public void addTransaction() {
+        this.transactions++;
+    }
+
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
-        Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+            Pattern.compile("^[A-Z\\d._%+-]+@[A-Z\\d.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private static final Pattern VALID_PASSWORD_REGEX =
-        Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$", Pattern.CASE_INSENSITIVE);
+            Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{6,}$", Pattern.CASE_INSENSITIVE);
 
-    private boolean isValidLength(String string, Integer min, Integer max){
+    private boolean isValidLength(String string, Integer min, Integer max) {
         return string.length() >= min && string.length() <= max;
     }
 }
