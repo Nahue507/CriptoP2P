@@ -9,6 +9,12 @@ public class UserDTO {
     public String cvu;
     public String wallet;
 
+    private String role;
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public UserDTO(String name, String lastname, String email, String address, String password, String cvu, String wallet) {
         this.name = name;
         this.lastname = lastname;

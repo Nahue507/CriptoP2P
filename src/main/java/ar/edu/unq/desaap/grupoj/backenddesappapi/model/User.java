@@ -46,11 +46,21 @@ public class User {
     private Integer reputation = 0;
 
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final Set<UserCurrency> currencies;
 
+    private String role;
+
     public Integer getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setId(Integer id) {
