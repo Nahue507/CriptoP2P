@@ -5,7 +5,7 @@ import ar.edu.unq.desaap.grupoj.backenddesappapi.model.IntentionStatus;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.TransactionType;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.IntentionDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.IntentionDetailsDTO;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.IntentionException;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions.IntentionException;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.IntentionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

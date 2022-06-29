@@ -5,7 +5,7 @@ import ar.edu.unq.desaap.grupoj.backenddesappapi.model.QuotationHistory;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.repositories.CurrencyRepository;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.repositories.QuotationRepository;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.QuotationHistoryDTO;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.CurrencyNotFoundException;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions.CurrencyNotFoundException;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.quotations.CryptosApiProperties;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.logging.Log;

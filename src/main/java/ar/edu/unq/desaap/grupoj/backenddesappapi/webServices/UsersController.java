@@ -4,7 +4,7 @@ import ar.edu.unq.desaap.grupoj.backenddesappapi.aspect.LogExecutionTime;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.UsersService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.UserDTO;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.dtos.UserDetailsDTO;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UsersException;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions.UsersException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;

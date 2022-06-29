@@ -1,4 +1,4 @@
-package ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions;
+package ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions;
 
 import static java.text.MessageFormat.format;
 

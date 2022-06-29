@@ -1,6 +1,6 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.model;
 
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.TransactionProcessException;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions.TransactionProcessException;
 
 import javax.persistence.*;
 import java.util.Date;

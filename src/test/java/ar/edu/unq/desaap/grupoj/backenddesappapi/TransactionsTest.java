@@ -1,7 +1,7 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi;
 
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.*;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.TransactionProcessException;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions.TransactionProcessException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;

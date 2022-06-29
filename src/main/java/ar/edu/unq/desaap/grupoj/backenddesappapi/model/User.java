@@ -1,6 +1,6 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.model;
 
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UsersException;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions.UsersException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

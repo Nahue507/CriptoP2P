@@ -3,7 +3,7 @@ package ar.edu.unq.desaap.grupoj.backenddesappapi;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.User;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.model.UserCurrency;
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UsersException;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions.UsersException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;

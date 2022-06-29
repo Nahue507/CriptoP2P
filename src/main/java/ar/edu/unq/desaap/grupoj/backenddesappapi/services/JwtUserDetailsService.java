@@ -1,6 +1,6 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.services;
 
-import ar.edu.unq.desaap.grupoj.backenddesappapi.services.exceptions.UserNotFoundException;
+import ar.edu.unq.desaap.grupoj.backenddesappapi.exceptions.UserNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
