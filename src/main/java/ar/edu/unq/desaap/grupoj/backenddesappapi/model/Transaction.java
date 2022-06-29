@@ -38,13 +38,22 @@ public class Transaction {
     private Currency currency;
 
     @Column
-    private float price;
+    private float priceUSD;
 
     @Column
     private float quantity;
 
     @Column
-    private Date date;
+    private Date dateCreated;
+
+    @Column
+    private Date dateProcessed;
+
+    @Column
+    private Float totalUSD;
+
+    @Column
+    private Float totalARS = 0f;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -106,12 +115,12 @@ public class Transaction {
         this.currency = currency;
     }
 
-    public float getPrice() {
-        return price;
+    public float getPriceUSD() {
+        return priceUSD;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
+    public void setPriceUSD(float priceUSD) {
+        this.priceUSD = priceUSD;
     }
 
     public float getQuantity() {
@@ -122,12 +131,36 @@ public class Transaction {
         this.quantity = quantity;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public Date getDateProcessed() {
+        return dateProcessed;
+    }
+
+    public void setDateProcessed(Date dateProcessed) {
+        this.dateProcessed = dateProcessed;
+    }
+
+    public float getTotalUSD() {
+        return totalUSD;
+    }
+
+    public void setTotalUSD(float totalUSD) {
+        this.totalUSD = totalUSD;
+    }
+
+    public float getTotalARS() {
+        return totalARS;
+    }
+
+    public void setTotalARS(float totalARS) {
+        this.totalARS = totalARS;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public TransactionStatus getStatus() {
@@ -149,17 +182,17 @@ public class Transaction {
     }
 
     public boolean priceIncreased() {
-        float percentage = (this.price - this.saleIntention.getPrice()) / 100;
+        float percentage = (this.priceUSD - this.saleIntention.getPrice()) / 100;
         return percentage > 0.05;
     }
 
     public boolean priceDecreased() {
-        float percentage = (this.price - this.saleIntention.getPrice()) / 100;
+        float percentage = (this.priceUSD - this.saleIntention.getPrice()) / 100;
         return percentage < -0.05;
     }
 
     public Integer calculatePoints() {
-        long duration = new Date().getTime() - this.getDate().getTime();
+        long duration = new Date().getTime() - this.getDateCreated().getTime();
         long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(duration);
 
         return diffInMinutes < 30 ? 10 : 5;

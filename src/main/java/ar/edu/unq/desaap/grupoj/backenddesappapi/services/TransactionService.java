@@ -32,6 +32,9 @@ public class TransactionService {
     @Autowired
     private IntentionService intentionService;
 
+    @Autowired
+    private QuotationService quotationService;
+
     @Transactional
     public TransactionDetailsDTO saveBuyTransaction(TransactionBuyDTO transactionDTO)
             throws TransactionException, CurrencyNotFoundException,
@@ -99,6 +102,11 @@ public class TransactionService {
         transaction.setStatus(TransactionStatus.COMPLETED);
         transaction.getSaleIntention().setStatus(IntentionStatus.COMPLETED);
         transaction.getBuyIntention().setStatus(IntentionStatus.COMPLETED);
+        transaction.setDateProcessed(new Date());
+
+        String dollarQuotation = quotationService.getDollarQuotation();
+
+        transaction.setTotalARS(quotationService.convert(transaction.getTotalUSD(), dollarQuotation));
 
         this.transactionRepository.save(transaction);
         logger.info(MessageFormat.format("Transaction with id: {0} was accepted", transaction.getId()));
@@ -130,9 +138,10 @@ public class TransactionService {
         transaction.setSeller(saleIntention.getIssuer());
         transaction.setSaleIntention(saleIntention);
         transaction.setBuyIntention(buyIntention);
-        transaction.setPrice(Float.parseFloat(currency.getPrice()));
+        transaction.setPriceUSD(Float.parseFloat(currency.getPrice()));
         transaction.setQuantity(buyIntention.getQuantity());
-        transaction.setDate(new Date());
+        transaction.setDateCreated(new Date());
+        transaction.setTotalUSD(Float.parseFloat(currency.getPrice()) * buyIntention.getQuantity());
         return transaction;
     }
 

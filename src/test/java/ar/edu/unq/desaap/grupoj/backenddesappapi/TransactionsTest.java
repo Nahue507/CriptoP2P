@@ -18,7 +18,7 @@ public class TransactionsTest {
         intention.setPrice(100);
 
         Transaction transaction = new Transaction();
-        transaction.setPrice(120);
+        transaction.setPriceUSD(120);
         transaction.setSaleIntention(intention);
 
         assertTrue(transaction.priceIncreased());
@@ -30,7 +30,7 @@ public class TransactionsTest {
         intention.setPrice(100);
 
         Transaction transaction = new Transaction();
-        transaction.setPrice(90);
+        transaction.setPriceUSD(90);
         transaction.setSaleIntention(intention);
 
         assertTrue(transaction.priceDecreased());
@@ -66,7 +66,7 @@ public class TransactionsTest {
         transaction.setType(TransactionType.SALE);
         transaction.setBuyer(buyer);
         transaction.setSeller(seller);
-        transaction.setPrice(90);
+        transaction.setPriceUSD(90);
         transaction.setSaleIntention(intention);
 
         assertTrue(transaction.shouldBeCancelled());
@@ -87,7 +87,7 @@ public class TransactionsTest {
         transaction.setType(TransactionType.SALE);
         transaction.setBuyer(buyer);
         transaction.setSeller(seller);
-        transaction.setPrice(98);
+        transaction.setPriceUSD(98);
         transaction.setSaleIntention(intention);
 
         assertFalse(transaction.shouldBeCancelled());
@@ -108,7 +108,7 @@ public class TransactionsTest {
         transaction.setType(TransactionType.BUY);
         transaction.setBuyer(buyer);
         transaction.setSeller(seller);
-        transaction.setPrice(110);
+        transaction.setPriceUSD(110);
         transaction.setSaleIntention(intention);
 
         assertTrue(transaction.shouldBeCancelled());
@@ -129,7 +129,7 @@ public class TransactionsTest {
         transaction.setType(TransactionType.BUY);
         transaction.setBuyer(buyer);
         transaction.setSeller(seller);
-        transaction.setPrice(103);
+        transaction.setPriceUSD(103);
         transaction.setSaleIntention(intention);
 
         assertFalse(transaction.shouldBeCancelled());
@@ -142,7 +142,7 @@ public class TransactionsTest {
         Date date10MinutesBefore = currentTimeNow.getTime();
 
         Transaction transaction = new Transaction();
-        transaction.setDate(date10MinutesBefore);
+        transaction.setDateCreated(date10MinutesBefore);
 
         assertEquals(10, transaction.calculatePoints());
     }
@@ -154,7 +154,7 @@ public class TransactionsTest {
         Date date50MinutesBefore = currentTimeNow.getTime();
 
         Transaction transaction = new Transaction();
-        transaction.setDate(date50MinutesBefore);
+        transaction.setDateCreated(date50MinutesBefore);
 
         assertEquals(5, transaction.calculatePoints());
     }
@@ -216,7 +216,7 @@ public class TransactionsTest {
         transaction.setSaleIntention(saleIntention);
         transaction.setCurrency(currency);
         transaction.setQuantity(200);
-        transaction.setDate(date);
+        transaction.setDateCreated(date);
         transaction.setStatus(TransactionStatus.TO_BE_CONFIRMED);
 
         assertEquals(1, transaction.getId());
@@ -225,7 +225,7 @@ public class TransactionsTest {
         assertEquals("Name", transaction.getSaleIntention().getIssuer().getName());
         assertEquals("1000", transaction.getCurrency().getPrice());
         assertEquals(200, transaction.getQuantity());
-        assertEquals(date, transaction.getDate());
+        assertEquals(date, transaction.getDateCreated());
         assertEquals(TransactionStatus.TO_BE_CONFIRMED, transaction.getStatus());
     }
 }

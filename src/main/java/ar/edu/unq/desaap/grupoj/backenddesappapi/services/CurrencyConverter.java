@@ -1,22 +1,22 @@
 package ar.edu.unq.desaap.grupoj.backenddesappapi.services;
 
 public class CurrencyConverter {
-    private double value;
-    private double factor;
+    private float value;
+    private float factor;
 
-    public void setValue(double value) {
+    public void setValue(float value) {
         this.value = value;
     }
 
-    public void setFactor(double factor) {
+    public void setFactor(float factor) {
         this.factor = factor;
     }
 
-    public double Convert(){
+    public float Convert(){
         return value * factor;
     }
 
-    public double Reverse(){
+    public float Reverse(){
         return value / factor;
     }
 }

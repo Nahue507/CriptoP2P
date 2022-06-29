@@ -14,20 +14,26 @@ public class TransactionDetailsDTO {
     public String currency;
     public float price;
     public float quantity;
-    public Date date;
+    public Date dateCreated;
+    public Date dateProcessed;
+    public Float totalUSD;
+    public Float totalARS;
     public TransactionStatus status;
 
-    public TransactionDetailsDTO(Transaction transactionCreated) {
-        this.id = transactionCreated.getId();
-        this.type = transactionCreated.getType();
-        this.buyer = transactionCreated.getBuyer().getEmail();
-        this.seller = transactionCreated.getSeller().getEmail();
-        this.buyIntention = new IntentionDetailsDTO(transactionCreated.getBuyIntention());
-        this.saleIntention = new IntentionDetailsDTO(transactionCreated.getSaleIntention());
-        this.currency = transactionCreated.getCurrency().getSymbol();
-        this.price = transactionCreated.getPrice();
-        this.quantity = transactionCreated.getQuantity();
-        this.date = transactionCreated.getDate();
-        this.status = transactionCreated.getStatus();
+    public TransactionDetailsDTO(Transaction transaction) {
+        this.id = transaction.getId();
+        this.type = transaction.getType();
+        this.buyer = transaction.getBuyer().getEmail();
+        this.seller = transaction.getSeller().getEmail();
+        this.buyIntention = new IntentionDetailsDTO(transaction.getBuyIntention());
+        this.saleIntention = new IntentionDetailsDTO(transaction.getSaleIntention());
+        this.currency = transaction.getCurrency().getSymbol();
+        this.price = transaction.getPriceUSD();
+        this.quantity = transaction.getQuantity();
+        this.dateCreated = transaction.getDateCreated();
+        this.dateProcessed = transaction.getDateProcessed();
+        this.totalUSD = transaction.getTotalUSD();
+        this.totalARS = transaction.getTotalARS();
+        this.status = transaction.getStatus();
     }
 }

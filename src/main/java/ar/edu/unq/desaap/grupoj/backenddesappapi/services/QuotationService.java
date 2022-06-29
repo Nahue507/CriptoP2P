@@ -30,10 +30,10 @@ public class QuotationService {
         return usd != null ? usd.getPrice() : null;
     }
 
-    public String convert(String dollars, String quotation){
-        this.converter.setValue(Double.parseDouble(dollars));
-        this.converter.setFactor(Double.parseDouble(quotation));
-        return String.valueOf(this.converter.Convert());
+    public Float convert(Float dollars, String quotation){
+        this.converter.setValue(dollars);
+        this.converter.setFactor(Float.parseFloat(quotation));
+        return this.converter.Convert();
     }
 
     @Transactional
