@@ -4,6 +4,7 @@ import ar.edu.unq.desaap.grupoj.backenddesappapi.model.Currency;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.CacheService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.CurrencyService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.QuotationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class CurrenciesQuotationJob {
     private CacheService cacheService;
 
     @Scheduled(fixedDelay = 600000)
-    protected void updatePrices(){
+    protected void updatePrices() throws JsonProcessingException {
         //Get prices
         List<Currency> currencyList = currencyService.getAllWithPrices();
 
