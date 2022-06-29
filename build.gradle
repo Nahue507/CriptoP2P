@@ -56,5 +56,12 @@ dependencies {
 
 		useJUnitPlatform()
 	}
-
+	bootJar {
+		archiveBaseName = 'dess-app-crypto'
+		archiveVersion = '0.0.1'
+	}
+	jar {
+		archiveBaseName = 'dess-app-crypto'
+		archiveVersion = '0.0.1'
+	}
 }
