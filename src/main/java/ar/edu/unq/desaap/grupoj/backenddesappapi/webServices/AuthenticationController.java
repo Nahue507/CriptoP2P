@@ -1,4 +1,4 @@
-package ar.edu.unq.desaap.grupoj.backenddesappapi.controller;
+package ar.edu.unq.desaap.grupoj.backenddesappapi.webServices;
 
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.JwtUserDetailsService;
 import ar.edu.unq.desaap.grupoj.backenddesappapi.services.UsersService;
@@ -75,5 +75,4 @@ public class AuthenticationController {
             return ResponseEntity.status(500).body(responseMap);
         }
     }
-
 }

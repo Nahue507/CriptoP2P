@@ -47,7 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.csrf().disable().authorizeRequests().antMatchers("/auth/*").permitAll().anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
+        httpSecurity.csrf().disable().authorizeRequests().antMatchers("/auth/*", "/h2-console/**").permitAll().anyRequest().authenticated()
+                .and().headers().frameOptions().sameOrigin()
+                .and().exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
             Map<String, Object> responseMap = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             response.setStatus(401);
@@ -58,8 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             response.getWriter().write(responseMsg);
         }).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/swagger-ui/**", "/v3/api-docs/**");
     }
 }
